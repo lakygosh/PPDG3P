@@ -1,0 +1,82 @@
+.table-page {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.modal-small {
+  max-width: 500px;
+}
+
+.delete-warning {
+  font-size: 16px;
+  color: #374151;
+  margin-bottom: 16px;
+}
+
+.delete-details {
+  background-color: #f3f4f6;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.delete-details div {
+  margin-bottom: 4px;
+}
+
+.delete-details div:last-child {
+  margin-bottom: 0;
+}
+
+/* Button styles (repeated from RecordForm for consistency) */
+.btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.btn-secondary {
+  background-color: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #f3f4f6;
+}
+
+.btn-danger {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}

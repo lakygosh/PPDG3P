@@ -1,0 +1,95 @@
+.error-panel {
+  background-color: #fef2f2;
+  border: 1px solid #ef4444;
+  border-radius: 8px;
+  margin: 16px 0;
+  overflow: hidden;
+}
+
+.error-panel-header {
+  background-color: #ef4444;
+  color: white;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.error-panel-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.error-close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.error-close-btn:hover {
+  opacity: 0.8;
+}
+
+.error-panel-content {
+  padding: 16px;
+}
+
+.sql-errors {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sql-error-item {
+  background-color: white;
+  border: 1px solid #fca5a5;
+  border-radius: 4px;
+  padding: 12px;
+}
+
+.error-number {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.error-number strong {
+  color: #b91c1c;
+}
+
+.error-class {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.error-message {
+  color: #1f2937;
+  font-family: monospace;
+  font-size: 14px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background-color: #f9fafb;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.error-detail {
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.error-detail span {
+  font-weight: 500;
+}
+
+.general-error p {
+  margin: 0;
+  color: #b91c1c;
+}
