@@ -67,3 +67,4 @@ D:\lazar\Documents\Repositories\PPDG3P\Backend\PPDG3P.Api\obj\Debug\net8.0\refin
 D:\lazar\Documents\Repositories\PPDG3P\Backend\PPDG3P.Api\obj\Debug\net8.0\PPDG3P.Api.pdb
 D:\lazar\Documents\Repositories\PPDG3P\Backend\PPDG3P.Api\obj\Debug\net8.0\PPDG3P.Api.genruntimeconfig.cache
 D:\lazar\Documents\Repositories\PPDG3P\Backend\PPDG3P.Api\obj\Debug\net8.0\ref\PPDG3P.Api.dll
+D:\lazar\Documents\Repositories\PPDG3P\Backend\PPDG3P.Api\obj\Debug\net8.0\PPDG3P.Api.sourcelink.json

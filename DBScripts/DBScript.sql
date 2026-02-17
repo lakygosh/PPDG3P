@@ -1,6 +1,6 @@
-USE [master]
+﻿USE [master]
 GO
-/****** Object:  Database [PPdb]    Script Date: 25/01/2026 22:18:52 ******/
+/****** Object:  Database [PPdb]    Script Date: 17/02/2026 12:18:21 ******/
 CREATE DATABASE [PPdb]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -74,9 +74,9 @@ ALTER DATABASE [PPdb] SET TARGET_RECOVERY_TIME = 60 SECONDS
 GO
 ALTER DATABASE [PPdb] SET DELAYED_DURABILITY = DISABLED 
 GO
-ALTER DATABASE [PPdb] SET ACCELERATED_DATABASE_RECOVERY = OFF  
-GO
 ALTER DATABASE [PPdb] SET OPTIMIZED_LOCKING = OFF 
+GO
+ALTER DATABASE [PPdb] SET ACCELERATED_DATABASE_RECOVERY = OFF  
 GO
 ALTER DATABASE [PPdb] SET QUERY_STORE = ON
 GO
@@ -84,13 +84,13 @@ ALTER DATABASE [PPdb] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEANUP_POLI
 GO
 USE [PPdb]
 GO
-/****** Object:  Schema [ppdg3p]    Script Date: 25/01/2026 22:18:52 ******/
+/****** Object:  Schema [ppdg3p]    Script Date: 17/02/2026 12:18:21 ******/
 CREATE SCHEMA [ppdg3p]
 GO
-/****** Object:  Schema [ppdg3p_arc]    Script Date: 25/01/2026 22:18:52 ******/
+/****** Object:  Schema [ppdg3p_arc]    Script Date: 17/02/2026 12:18:21 ******/
 CREATE SCHEMA [ppdg3p_arc]
 GO
-/****** Object:  Table [ppdg3p].[PoreskiObveznik]    Script Date: 25/01/2026 22:18:52 ******/
+/****** Object:  Table [ppdg3p].[PoreskiObveznik]    Script Date: 17/02/2026 12:18:21 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -99,29 +99,70 @@ CREATE TABLE [ppdg3p].[PoreskiObveznik](
 	[JMBG/ESB/PIB_lice] [bigint] NOT NULL,
 	[Ime] [nchar](30) NOT NULL,
 	[Prezime] [nchar](30) NOT NULL,
-	[Email] [nchar](30) NULL,
+	[PrebivalisteOstvPrih] [nvarchar](50) NOT NULL,
  CONSTRAINT [PK_PoreskiObveznik] PRIMARY KEY CLUSTERED 
 (
 	[JMBG/ESB/PIB_lice] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[PrenosHartijaOdVrednosti]    Script Date: 25/01/2026 22:18:52 ******/
+/****** Object:  Table [ppdg3p].[PPDG3P_Details]    Script Date: 17/02/2026 12:18:21 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [ppdg3p].[PrenosHartijaOdVrednosti](
-	[IDStavkePrenosa] [int] NOT NULL,
-	[Naziv] [nchar](30) NOT NULL,
-	[BrDokOPrenosu] [int] NOT NULL,
- CONSTRAINT [PK_PrenosHartijaOdVrednosti] PRIMARY KEY CLUSTERED 
+CREATE TABLE [ppdg3p].[PPDG3P_Details](
+	[ID] [int] NOT NULL,
+	[DatumOstvarivanjaPrihoda] [date] NOT NULL,
+	[DatumDospelostiZaPodnosenjePrijave] [date] NOT NULL,
+	[DatumNacinPodnosenjaPrijave] [date] NOT NULL,
+	[Izmena] [bit] NOT NULL,
+	[IDOrganaPoreske] [int] NOT NULL,
+	[IDVrstePrijave] [int] NOT NULL,
+	[IDOsnovaZaPrijavu] [int] NOT NULL,
+ CONSTRAINT [PK_PPDG3P_Details] PRIMARY KEY CLUSTERED 
 (
-	[IDStavkePrenosa] ASC
+	[ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[OrgPU]    Script Date: 25/01/2026 22:18:52 ******/
+/****** Object:  Table [ppdg3p].[StavkaPrenosa]    Script Date: 17/02/2026 12:18:21 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [ppdg3p].[StavkaPrenosa](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[IDPrijave] [int] NOT NULL,
+	[NabavnaCena] [bigint] NOT NULL,
+	[DatumPrenosa] [date] NOT NULL,
+	[ProdajnaCena] [bigint] NOT NULL,
+	[DatumSticanja] [date] NOT NULL,
+	[PrenosPravaUdelaDigImov] [bit] NOT NULL,
+ CONSTRAINT [PK_StavkaPrenosa_1] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC,
+	[IDPrijave] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [ppdg3p].[StavkaUmanjenja]    Script Date: 17/02/2026 12:18:21 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [ppdg3p].[StavkaUmanjenja](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[IDPrijave] [int] NOT NULL,
+	[DatumUlaganja] [date] NOT NULL,
+ CONSTRAINT [PK_StavkaUmanjenja] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC,
+	[IDPrijave] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [ppdg3p].[OrgPU]    Script Date: 17/02/2026 12:18:21 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -135,7 +176,7 @@ CREATE TABLE [ppdg3p].[OrgPU](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[Dokazi]    Script Date: 25/01/2026 22:18:52 ******/
+/****** Object:  Table [ppdg3p].[Dokazi]    Script Date: 17/02/2026 12:18:21 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -152,100 +193,42 @@ CREATE TABLE [ppdg3p].[Dokazi](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[VrstaPrijave]    Script Date: 25/01/2026 22:18:52 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [ppdg3p].[VrstaPrijave](
-	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[Naziv] [nchar](30) NOT NULL,
- CONSTRAINT [PK_VrstaPrijave] PRIMARY KEY CLUSTERED 
-(
-	[ID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [ppdg3p].[OsnovZaPrijavu]    Script Date: 25/01/2026 22:18:52 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [ppdg3p].[OsnovZaPrijavu](
-	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[Naziv] [nchar](30) NOT NULL,
- CONSTRAINT [PK_OsnovZaPrijavu] PRIMARY KEY CLUSTERED 
-(
-	[ID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [ppdg3p].[StavkaPrenosa]    Script Date: 25/01/2026 22:18:52 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [ppdg3p].[StavkaPrenosa](
-	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[DatumPrenosa] [date] NOT NULL,
-	[ProdajnaCena] [bigint] NOT NULL,
-	[DatumSticanja] [date] NOT NULL,
-	[NabavnaCena] [bigint] NOT NULL,
-	[IDPrijave] [int] NOT NULL,
-	[PrenosPravaUdelaDigImov] [bit] NOT NULL,
- CONSTRAINT [PK_StavkaPrenosa] PRIMARY KEY CLUSTERED 
-(
-	[ID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [ppdg3p].[DokumentOSticanju]    Script Date: 25/01/2026 22:18:52 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [ppdg3p].[DokumentOSticanju](
-	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[BrojStecenihJedinica] [int] NOT NULL,
-	[IDPrenHartVred] [int] NULL,
- CONSTRAINT [PK_DokumentOSticanju] PRIMARY KEY CLUSTERED 
-(
-	[ID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [ppdg3p].[StavkaUmanjenja]    Script Date: 25/01/2026 22:18:52 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [ppdg3p].[StavkaUmanjenja](
-	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[DatumUlaganja] [date] NOT NULL,
-	[IDPrijave] [int] NOT NULL,
- CONSTRAINT [PK_StavkaUmanjenja] PRIMARY KEY CLUSTERED 
-(
-	[ID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [ppdg3p].[UlaganjneUResavanjeSP]    Script Date: 25/01/2026 22:18:52 ******/
+/****** Object:  Table [ppdg3p].[UlaganjneUResavanjeSP]    Script Date: 17/02/2026 12:18:21 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [ppdg3p].[UlaganjneUResavanjeSP](
 	[IDStavkeUmanjenja] [int] NOT NULL,
+	[IDPrijave] [int] NOT NULL,
 	[IznosUlozenihSredstava] [bigint] NOT NULL,
 	[PovrsinaZaOslobadjanje] [real] NOT NULL,
 	[Domacinstvo] [bit] NOT NULL,
  CONSTRAINT [PK_UlaganjneUResavanjeSP] PRIMARY KEY CLUSTERED 
 (
-	[IDStavkeUmanjenja] ASC
+	[IDStavkeUmanjenja] ASC,
+	[IDPrijave] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[UlaganjeUOsnKap]    Script Date: 25/01/2026 22:18:52 ******/
+/****** Object:  Table [ppdg3p].[KapitalniGubitak]    Script Date: 17/02/2026 12:18:21 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [ppdg3p].[KapitalniGubitak](
+	[IDStavkeUmanjenja] [int] NOT NULL,
+	[BrojResenja] [int] NOT NULL,
+	[IznosKapGub] [bigint] NOT NULL,
+	[IDPrijave] [int] NOT NULL,
+ CONSTRAINT [PK_KapitalniGubitak] PRIMARY KEY CLUSTERED 
+(
+	[IDStavkeUmanjenja] ASC,
+	[BrojResenja] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [ppdg3p].[UlaganjeUOsnKap]    Script Date: 17/02/2026 12:18:21 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -260,36 +243,14 @@ CREATE TABLE [ppdg3p].[UlaganjeUOsnKap](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[KapitalniGubitak]    Script Date: 25/01/2026 22:18:52 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [ppdg3p].[KapitalniGubitak](
-	[IDStavkeUmanjenja] [int] NOT NULL,
-	[IznosKapGub] [bigint] NOT NULL,
-	[BrojResenja] [int] NOT NULL,
- CONSTRAINT [PK_KapitalniGubitak] PRIMARY KEY CLUSTERED 
-(
-	[IDStavkeUmanjenja] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [ppdg3p].[PPDG3P]    Script Date: 25/01/2026 22:18:52 ******/
+/****** Object:  Table [ppdg3p].[PPDG3P]    Script Date: 17/02/2026 12:18:21 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [ppdg3p].[PPDG3P](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[DatumOstvarivanjaPrihoda] [date] NOT NULL,
-	[DatumDospelostiZaPodnosenjePrijave] [date] NOT NULL,
-	[DatumNacinPodnosenjaPrijave] [date] NOT NULL,
-	[Izmena] [bit] NOT NULL,
-	[IDOrganaPoreske] [int] NOT NULL,
 	[IDPoreskogObveznika] [bigint] NOT NULL,
-	[IDVrstePrijave] [int] NOT NULL,
-	[IDOsnovaZaPrijavu] [int] NOT NULL,
 	[UkProdajnaCena] [bigint] NOT NULL,
 	[UkNabavnaCena] [bigint] NOT NULL,
 	[UkUmanjenja] [bigint] NOT NULL,
@@ -301,36 +262,102 @@ CREATE TABLE [ppdg3p].[PPDG3P](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [ppdg3p].[vw_PPDG3P_Document]    Script Date: 25/01/2026 22:18:52 ******/
+/****** Object:  Table [ppdg3p].[Lice]    Script Date: 17/02/2026 12:18:21 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-
-CREATE   VIEW [ppdg3p].[vw_PPDG3P_Document]
+CREATE TABLE [ppdg3p].[Lice](
+	[JMBG/ESB/PIB] [bigint] NOT NULL,
+	[Telefon] [nvarchar](30) NULL,
+	[Adresa] [nvarchar](50) NULL,
+	[Drzava] [nvarchar](50) NULL,
+	[Email] [nvarchar](30) NULL,
+ CONSTRAINT [PK_Lice] PRIMARY KEY CLUSTERED 
+(
+	[JMBG/ESB/PIB] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [ppdg3p].[PrenosHartijaOdVrednosti]    Script Date: 17/02/2026 12:18:21 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [ppdg3p].[PrenosHartijaOdVrednosti](
+	[IDStavkePrenosa] [int] NOT NULL,
+	[IDPrijave] [int] NOT NULL,
+	[Naziv] [nchar](30) NOT NULL,
+	[BrDokOPrenosu] [int] NOT NULL,
+	[BrPrenetihHOV] [int] NOT NULL,
+ CONSTRAINT [PK_PrenosHartijaOdVrednosti] PRIMARY KEY CLUSTERED 
+(
+	[IDStavkePrenosa] ASC,
+	[IDPrijave] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [ppdg3p].[DokumentOSticanju]    Script Date: 17/02/2026 12:18:21 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [ppdg3p].[DokumentOSticanju](
+	[ID] [int] NOT NULL,
+	[BrojStecenihJedinica] [int] NOT NULL,
+	[IDPrenHartVred] [int] NULL,
+	[IDPrijave] [int] NOT NULL,
+	[DatumSticanja] [date] NOT NULL,
+	[NabavnaCena] [bigint] NOT NULL,
+ CONSTRAINT [PK_DokumentOSticanju] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  View [ppdg3p].[vw_PPDG3P_Document]    Script Date: 17/02/2026 12:18:21 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE VIEW [ppdg3p].[vw_PPDG3P_Document]
 AS
 SELECT
     p.ID AS IDPrijave,
     (
         SELECT
             p.ID AS idPrijave,
-            p.DatumOstvarivanjaPrihoda AS datumOstvarivanjaPrihoda,
-            p.DatumDospelostiZaPodnosenjePrijave AS datumDospelostiZaPodnosenjePrijave,
-            p.DatumNacinPodnosenjaPrijave AS datumNacinPodnosenjaPrijave,
-            p.Izmena AS izmena,
 
-            p.IDOrganaPoreske AS idOrganaPoreske,
+            -- HEADER iz PPDG3P_Details
+            pd.DatumOstvarivanjaPrihoda AS datumOstvarivanjaPrihoda,
+            pd.DatumDospelostiZaPodnosenjePrijave AS datumDospelostiZaPodnosenjePrijave,
+            pd.DatumNacinPodnosenjaPrijave AS datumNacinPodnosenjaPrijave,
+            pd.Izmena AS izmena,
+
+            pd.IDOrganaPoreske AS idOrganaPoreske,
             p.IDPoreskogObveznika AS idPoreskogObveznika,
-            p.IDVrstePrijave AS idVrstePrijave,
-            p.IDOsnovaZaPrijavu AS idOsnovaZaPrijavu,
+            pd.IDVrstePrijave AS idVrstePrijave,
+            pd.IDOsnovaZaPrijavu AS idOsnovaZaPrijavu,
+
+            -- TOTALS iz PPDG3P
+            p.UkProdajnaCena AS ukProdajnaCena,
+            p.UkNabavnaCena AS ukNabavnaCena,
+            p.UkUmanjenja AS ukUmanjenja,
+            p.KapitalnaOsnovica AS kapitalnaOsnovica,
 
             JSON_QUERY((
                 SELECT
                     po.[JMBG/ESB/PIB_lice] AS id,
                     RTRIM(po.Ime) AS ime,
                     RTRIM(po.Prezime) AS prezime,
-                    COALESCE(NULLIF(RTRIM(po.Email), ''), NULLIF(RTRIM(CONVERT(nvarchar(50), p.Email_lice)), '')) AS email
+                    RTRIM(po.PrebivalisteOstvPrih) AS prebivalisteOstvPrih,
+                    RTRIM(l.Email) AS email,
+                    RTRIM(l.Telefon) AS telefon,
+                    RTRIM(l.Adresa) AS adresa,
+                    RTRIM(l.Drzava) AS drzava
                 FROM [ppdg3p].[PoreskiObveznik] po
+                LEFT JOIN [ppdg3p].[Lice] l
+                    ON l.[JMBG/ESB/PIB] = po.[JMBG/ESB/PIB_lice]
                 WHERE po.[JMBG/ESB/PIB_lice] = p.IDPoreskogObveznika
                 FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
             )) AS poreskiObveznik,
@@ -338,21 +365,32 @@ SELECT
             JSON_QUERY((
                 SELECT o.ID AS id, RTRIM(o.Naziv) AS naziv
                 FROM [ppdg3p].[OrgPU] o
-                WHERE o.ID = p.IDOrganaPoreske
+                WHERE o.ID = pd.IDOrganaPoreske
                 FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
             )) AS organPU,
 
+            -- VrstaPrijave: inline mapping (umesto join na tabelu/view)
             JSON_QUERY((
-                SELECT vp.ID AS id, RTRIM(vp.Naziv) AS naziv
-                FROM [ppdg3p].[VrstaPrijave] vp
-                WHERE vp.ID = p.IDVrstePrijave
+                SELECT v.ID AS id, v.Naziv AS naziv
+                FROM (VALUES
+                    (1, N'Konačna prijava'),
+                    (2, N'Izmenjena prijava')
+                ) v(ID, Naziv)
+                WHERE v.ID = pd.IDVrstePrijave
                 FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
             )) AS vrstaPrijave,
 
+            -- OsnovZaPrijavu: inline mapping
             JSON_QUERY((
-                SELECT oz.ID AS id, RTRIM(oz.Naziv) AS naziv
-                FROM [ppdg3p].[OsnovZaPrijavu] oz
-                WHERE oz.ID = p.IDOsnovaZaPrijavu
+                SELECT o.ID AS id, o.Naziv AS naziv
+                FROM (VALUES
+                    (1, N'Prodaja nepokretnosti'),
+                    (2, N'Prodaja hartija od vrednosti (HoV)'),
+                    (3, N'Udeo u pravnom licu'),
+                    (4, N'Autorska prava'),
+                    (5, N'Nasleđe/Poklon')
+                ) o(ID, Naziv)
+                WHERE o.ID = pd.IDOsnovaZaPrijavu
                 FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
             )) AS osnovZaPrijavu,
 
@@ -445,8 +483,13 @@ SELECT
                     sp.PrenosPravaUdelaDigImov AS IsDigital,
                     RTRIM(phv.Naziv) AS Naziv,
                     phv.BrDokOPrenosu AS BrDokOPrenosu,
+                    phv.BrPrenetihHOV AS BrPrenetihHOV,
                     JSON_QUERY((
-                        SELECT dos.BrojStecenihJedinica AS BrojStecenihJedinica
+                        SELECT
+                            dos.DatumSticanja AS DatumSticanja,
+                            dos.ID AS BrojDokOSticanju,
+                            dos.BrojStecenihJedinica AS BrojStecenihJedinica,
+                            dos.NabavnaCena AS NabavnaCena
                         FROM ppdg3p.DokumentOSticanju dos
                         WHERE dos.IDPrenHartVred = sp.ID
                         FOR JSON PATH
@@ -460,9 +503,11 @@ SELECT
 
         FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
     ) AS JsonDoc
-FROM [ppdg3p].[PPDG3P] p;
+FROM [ppdg3p].[PPDG3P] p
+JOIN [ppdg3p].[PPDG3P_Details] pd
+    ON pd.ID = p.ID;
 GO
-/****** Object:  Table [ppdg3p].[Broker]    Script Date: 25/01/2026 22:18:52 ******/
+/****** Object:  Table [ppdg3p].[Broker]    Script Date: 17/02/2026 12:18:21 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -476,7 +521,7 @@ CREATE TABLE [ppdg3p].[Broker](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[Fizicko]    Script Date: 25/01/2026 22:18:52 ******/
+/****** Object:  Table [ppdg3p].[Fizicko]    Script Date: 17/02/2026 12:18:21 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -491,41 +536,7 @@ CREATE TABLE [ppdg3p].[Fizicko](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[Lice]    Script Date: 25/01/2026 22:18:52 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [ppdg3p].[Lice](
-	[JMBG/ESB/PIB] [bigint] NOT NULL,
-	[Telefon] [nvarchar](30) NULL,
-	[Adresa] [nvarchar](50) NULL,
-	[Drzava] [nvarchar](50) NULL,
-	[Email] [nvarchar](30) NOT NULL,
- CONSTRAINT [PK_Lice] PRIMARY KEY CLUSTERED 
-(
-	[JMBG/ESB/PIB] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [ppdg3p].[PoreskiObveznik_Details]    Script Date: 25/01/2026 22:18:52 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [ppdg3p].[PoreskiObveznik_Details](
-	[JMBG/ESB/PIB] [bigint] NOT NULL,
-	[Telefon] [nchar](30) NULL,
-	[Drzava] [nchar](30) NULL,
-	[PrebOstvPrih] [nchar](30) NOT NULL,
-	[AdrObv] [nchar](30) NOT NULL,
- CONSTRAINT [PK_PoreskiObveznik_Details] PRIMARY KEY CLUSTERED 
-(
-	[JMBG/ESB/PIB] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [ppdg3p].[Pravno]    Script Date: 25/01/2026 22:18:52 ******/
+/****** Object:  Table [ppdg3p].[Pravno]    Script Date: 17/02/2026 12:18:21 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -539,7 +550,7 @@ CREATE TABLE [ppdg3p].[Pravno](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[Punomocnik]    Script Date: 25/01/2026 22:18:52 ******/
+/****** Object:  Table [ppdg3p].[Punomocnik]    Script Date: 17/02/2026 12:18:21 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -556,7 +567,7 @@ CREATE TABLE [ppdg3p].[Punomocnik](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Dokazi]    Script Date: 25/01/2026 22:18:52 ******/
+/****** Object:  Index [IX_Dokazi]    Script Date: 17/02/2026 12:18:21 ******/
 CREATE NONCLUSTERED INDEX [IX_Dokazi] ON [ppdg3p].[Dokazi]
 (
 	[BrojDokaza] ASC
@@ -564,16 +575,16 @@ CREATE NONCLUSTERED INDEX [IX_Dokazi] ON [ppdg3p].[Dokazi]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UX_PoreskiObveznik_Email_NotNull]    Script Date: 25/01/2026 22:18:52 ******/
-CREATE UNIQUE NONCLUSTERED INDEX [UX_PoreskiObveznik_Email_NotNull] ON [ppdg3p].[PoreskiObveznik]
+/****** Object:  Index [UX_Lice_Email_NotNull]    Script Date: 17/02/2026 12:18:21 ******/
+CREATE UNIQUE NONCLUSTERED INDEX [UX_Lice_Email_NotNull] ON [ppdg3p].[Lice]
 (
 	[Email] ASC
 )
-INCLUDE([Ime],[Prezime]) 
+INCLUDE([JMBG/ESB/PIB],[Drzava],[Adresa]) 
 WHERE ([Email] IS NOT NULL)
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_StavkaPrenosa_IDPrijave_Cover]    Script Date: 25/01/2026 22:18:52 ******/
+/****** Object:  Index [IX_StavkaPrenosa_IDPrijave_Cover]    Script Date: 17/02/2026 12:18:21 ******/
 CREATE NONCLUSTERED INDEX [IX_StavkaPrenosa_IDPrijave_Cover] ON [ppdg3p].[StavkaPrenosa]
 (
 	[IDPrijave] ASC
@@ -608,9 +619,8 @@ ON DELETE CASCADE
 GO
 ALTER TABLE [ppdg3p].[Dokazi] CHECK CONSTRAINT [FK_Dokazi_PPDG3P]
 GO
-ALTER TABLE [ppdg3p].[DokumentOSticanju]  WITH CHECK ADD  CONSTRAINT [FK_DokumentOSticanju_PrenosHartijaOdVrednosti] FOREIGN KEY([IDPrenHartVred])
-REFERENCES [ppdg3p].[PrenosHartijaOdVrednosti] ([IDStavkePrenosa])
-ON DELETE CASCADE
+ALTER TABLE [ppdg3p].[DokumentOSticanju]  WITH CHECK ADD  CONSTRAINT [FK_DokumentOSticanju_PrenosHartijaOdVrednosti] FOREIGN KEY([IDPrenHartVred], [IDPrijave])
+REFERENCES [ppdg3p].[PrenosHartijaOdVrednosti] ([IDStavkePrenosa], [IDPrijave])
 GO
 ALTER TABLE [ppdg3p].[DokumentOSticanju] CHECK CONSTRAINT [FK_DokumentOSticanju_PrenosHartijaOdVrednosti]
 GO
@@ -619,53 +629,31 @@ REFERENCES [ppdg3p].[Lice] ([JMBG/ESB/PIB])
 GO
 ALTER TABLE [ppdg3p].[Fizicko] CHECK CONSTRAINT [FK_Fizicko_Lice]
 GO
-ALTER TABLE [ppdg3p].[KapitalniGubitak]  WITH CHECK ADD  CONSTRAINT [FK_KapitalniGubitak_StavkaUmanjenja] FOREIGN KEY([IDStavkeUmanjenja])
-REFERENCES [ppdg3p].[StavkaUmanjenja] ([ID])
-ON DELETE CASCADE
-GO
-ALTER TABLE [ppdg3p].[KapitalniGubitak] CHECK CONSTRAINT [FK_KapitalniGubitak_StavkaUmanjenja]
-GO
 ALTER TABLE [ppdg3p].[PoreskiObveznik]  WITH CHECK ADD  CONSTRAINT [FK_PoreskiObveznik_Lice] FOREIGN KEY([JMBG/ESB/PIB_lice])
 REFERENCES [ppdg3p].[Lice] ([JMBG/ESB/PIB])
 GO
 ALTER TABLE [ppdg3p].[PoreskiObveznik] CHECK CONSTRAINT [FK_PoreskiObveznik_Lice]
-GO
-ALTER TABLE [ppdg3p].[PoreskiObveznik_Details]  WITH CHECK ADD  CONSTRAINT [FK_PoreskiObveznik_Details_Obveznik] FOREIGN KEY([JMBG/ESB/PIB])
-REFERENCES [ppdg3p].[PoreskiObveznik] ([JMBG/ESB/PIB_lice])
-ON DELETE CASCADE
-GO
-ALTER TABLE [ppdg3p].[PoreskiObveznik_Details] CHECK CONSTRAINT [FK_PoreskiObveznik_Details_Obveznik]
-GO
-ALTER TABLE [ppdg3p].[PPDG3P]  WITH CHECK ADD  CONSTRAINT [FK_PPDG3P_OrgPU] FOREIGN KEY([IDOrganaPoreske])
-REFERENCES [ppdg3p].[OrgPU] ([ID])
-GO
-ALTER TABLE [ppdg3p].[PPDG3P] CHECK CONSTRAINT [FK_PPDG3P_OrgPU]
-GO
-ALTER TABLE [ppdg3p].[PPDG3P]  WITH CHECK ADD  CONSTRAINT [FK_PPDG3P_OsnovZaPrijavu] FOREIGN KEY([IDOsnovaZaPrijavu])
-REFERENCES [ppdg3p].[OsnovZaPrijavu] ([ID])
-GO
-ALTER TABLE [ppdg3p].[PPDG3P] CHECK CONSTRAINT [FK_PPDG3P_OsnovZaPrijavu]
 GO
 ALTER TABLE [ppdg3p].[PPDG3P]  WITH CHECK ADD  CONSTRAINT [FK_PPDG3P_PoreskiObveznik] FOREIGN KEY([IDPoreskogObveznika])
 REFERENCES [ppdg3p].[PoreskiObveznik] ([JMBG/ESB/PIB_lice])
 GO
 ALTER TABLE [ppdg3p].[PPDG3P] CHECK CONSTRAINT [FK_PPDG3P_PoreskiObveznik]
 GO
-ALTER TABLE [ppdg3p].[PPDG3P]  WITH CHECK ADD  CONSTRAINT [FK_PPDG3P_VrstaPrijave] FOREIGN KEY([IDVrstePrijave])
-REFERENCES [ppdg3p].[VrstaPrijave] ([ID])
+ALTER TABLE [ppdg3p].[PPDG3P_Details]  WITH CHECK ADD  CONSTRAINT [FK_PPDG3P_Details_OrgPU] FOREIGN KEY([IDOrganaPoreske])
+REFERENCES [ppdg3p].[OrgPU] ([ID])
 GO
-ALTER TABLE [ppdg3p].[PPDG3P] CHECK CONSTRAINT [FK_PPDG3P_VrstaPrijave]
+ALTER TABLE [ppdg3p].[PPDG3P_Details] CHECK CONSTRAINT [FK_PPDG3P_Details_OrgPU]
+GO
+ALTER TABLE [ppdg3p].[PPDG3P_Details]  WITH CHECK ADD  CONSTRAINT [FK_PPDG3P_Details_PPDG3P] FOREIGN KEY([ID])
+REFERENCES [ppdg3p].[PPDG3P] ([ID])
+ON DELETE CASCADE
+GO
+ALTER TABLE [ppdg3p].[PPDG3P_Details] CHECK CONSTRAINT [FK_PPDG3P_Details_PPDG3P]
 GO
 ALTER TABLE [ppdg3p].[Pravno]  WITH CHECK ADD  CONSTRAINT [FK_Pravno_Lice] FOREIGN KEY([JMGB/ESB/PIB_lice])
 REFERENCES [ppdg3p].[Lice] ([JMBG/ESB/PIB])
 GO
 ALTER TABLE [ppdg3p].[Pravno] CHECK CONSTRAINT [FK_Pravno_Lice]
-GO
-ALTER TABLE [ppdg3p].[PrenosHartijaOdVrednosti]  WITH CHECK ADD  CONSTRAINT [FK_PrenosHartijaOdVrednosti_StavkaPrenosa] FOREIGN KEY([IDStavkePrenosa])
-REFERENCES [ppdg3p].[StavkaPrenosa] ([ID])
-ON DELETE CASCADE
-GO
-ALTER TABLE [ppdg3p].[PrenosHartijaOdVrednosti] CHECK CONSTRAINT [FK_PrenosHartijaOdVrednosti_StavkaPrenosa]
 GO
 ALTER TABLE [ppdg3p].[Punomocnik]  WITH CHECK ADD  CONSTRAINT [FK_Punomocnik_PoreskiObveznik] FOREIGN KEY([JMBG/ESB/PIB_lice])
 REFERENCES [ppdg3p].[PoreskiObveznik] ([JMBG/ESB/PIB_lice])
@@ -689,19 +677,15 @@ ON DELETE CASCADE
 GO
 ALTER TABLE [ppdg3p].[StavkaUmanjenja] CHECK CONSTRAINT [FK_StavkaUmanjenja_PPDG3P]
 GO
-ALTER TABLE [ppdg3p].[UlaganjeUOsnKap]  WITH CHECK ADD  CONSTRAINT [FK_UlaganjeUOsnKap_StavkaUmanjenja] FOREIGN KEY([IDStavkeUmanjenja])
-REFERENCES [ppdg3p].[StavkaUmanjenja] ([ID])
-ON DELETE CASCADE
+ALTER TABLE [ppdg3p].[PPDG3P_Details]  WITH CHECK ADD  CONSTRAINT [CK_PPDG3P_Details_IDOsnovaZaPrijavu] CHECK  (([IDOsnovaZaPrijavu]=(5) OR [IDOsnovaZaPrijavu]=(4) OR [IDOsnovaZaPrijavu]=(3) OR [IDOsnovaZaPrijavu]=(2) OR [IDOsnovaZaPrijavu]=(1)))
 GO
-ALTER TABLE [ppdg3p].[UlaganjeUOsnKap] CHECK CONSTRAINT [FK_UlaganjeUOsnKap_StavkaUmanjenja]
+ALTER TABLE [ppdg3p].[PPDG3P_Details] CHECK CONSTRAINT [CK_PPDG3P_Details_IDOsnovaZaPrijavu]
 GO
-ALTER TABLE [ppdg3p].[UlaganjneUResavanjeSP]  WITH CHECK ADD  CONSTRAINT [FK_UlaganjneUResavanjeSP_StavkaUmanjenja] FOREIGN KEY([IDStavkeUmanjenja])
-REFERENCES [ppdg3p].[StavkaUmanjenja] ([ID])
-ON DELETE CASCADE
+ALTER TABLE [ppdg3p].[PPDG3P_Details]  WITH CHECK ADD  CONSTRAINT [CK_PPDG3P_Details_IDVrstePrijave] CHECK  (([IDVrstePrijave]=(2) OR [IDVrstePrijave]=(1)))
 GO
-ALTER TABLE [ppdg3p].[UlaganjneUResavanjeSP] CHECK CONSTRAINT [FK_UlaganjneUResavanjeSP_StavkaUmanjenja]
+ALTER TABLE [ppdg3p].[PPDG3P_Details] CHECK CONSTRAINT [CK_PPDG3P_Details_IDVrstePrijave]
 GO
-/****** Object:  StoredProcedure [ppdg3p].[PPDG3P_OsnovicaCalc]    Script Date: 25/01/2026 22:18:52 ******/
+/****** Object:  StoredProcedure [ppdg3p].[PPDG3P_OsnovicaCalc]    Script Date: 17/02/2026 12:18:21 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -746,14 +730,393 @@ BEGIN
     WHERE p.ID = @IDPrijave;
 END
 GO
-/****** Object:  StoredProcedure [ppdg3p].[UpsertPPDG3PDocumentFromJson]    Script Date: 25/01/2026 22:18:52 ******/
+/****** Object:  StoredProcedure [ppdg3p].[Seed_PPDG3P_Bulk]    Script Date: 17/02/2026 12:18:21 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
+CREATE   PROCEDURE [ppdg3p].[Seed_PPDG3P_Bulk]
+    @N int = 5000,
+    @MaxPrenosi int = 4,
+    @MaxDokazi  int = 3,
+    @MaxUmanj   int = 3
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    IF @N <= 0 SET @N = 0;
+    IF @MaxPrenosi < 1 SET @MaxPrenosi = 1;
+    IF @MaxDokazi  < 0 SET @MaxDokazi  = 0;
+    IF @MaxUmanj   < 0 SET @MaxUmanj   = 0;
+
+    /* 0) OrgPU seed ako je prazna */
+    IF NOT EXISTS (SELECT 1 FROM ppdg3p.OrgPU)
+    BEGIN
+        INSERT ppdg3p.OrgPU(Naziv)
+        VALUES (N'PU Beograd'), (N'PU Novi Sad'), (N'PU Niš'), (N'PU Kragujevac'), (N'PU Subotica');
+    END
+
+    /* 1) Kandidati iz Lice koji jos nisu PoreskiObveznik */
+    IF OBJECT_ID('tempdb..#Cand') IS NOT NULL DROP TABLE #Cand;
+
+    SELECT TOP (@N)
+        l.[JMBG/ESB/PIB] AS LiceID,
+        l.Email          AS Email,
+        ROW_NUMBER() OVER (ORDER BY NEWID()) AS rn
+    INTO #Cand
+    FROM ppdg3p.Lice l
+    WHERE NOT EXISTS (
+        SELECT 1 FROM ppdg3p.PoreskiObveznik po
+        WHERE po.[JMBG/ESB/PIB_lice] = l.[JMBG/ESB/PIB]
+    )
+    ORDER BY NEWID();
+
+    DECLARE @Nreal int = (SELECT COUNT(*) FROM #Cand);
+    IF @Nreal = 0
+        THROW 53000, 'Nema dostupnih Lice redova (svi su vec u PoreskiObveznik).', 1;
+
+    /* 2) Insert PoreskiObveznik */
+    INSERT ppdg3p.PoreskiObveznik([JMBG/ESB/PIB_lice],[Ime],[Prezime],[PrebivalisteOstvPrih])
+    SELECT
+        c.LiceID,
+        CAST(LEFT(N'Ime' + RIGHT(N'00000' + CAST(c.rn AS nvarchar(10)), 5), 30) AS nchar(30)),
+        CAST(LEFT(N'Prezime' + RIGHT(N'00000' + CAST(c.rn AS nvarchar(10)), 5), 30) AS nchar(30)),
+        N'Beograd'
+    FROM #Cand c;
+
+    /* 3) Insert PPDG3P + mapiranje (FIX: nema c.rn u OUTPUT) */
+    DECLARE @Inserted TABLE(
+        IDPrijave int NOT NULL PRIMARY KEY,
+        LiceID bigint NOT NULL,
+        Email nvarchar(30) NULL
+    );
+
+    INSERT ppdg3p.PPDG3P(IDPoreskogObveznika, Email_lice)
+    OUTPUT inserted.ID, inserted.IDPoreskogObveznika, inserted.Email_lice
+    INTO @Inserted(IDPrijave, LiceID, Email)
+    SELECT c.LiceID, c.Email
+    FROM #Cand c;
+
+    DECLARE @Prijave TABLE(
+        RowId int IDENTITY(1,1) PRIMARY KEY,
+        IDPrijave int NOT NULL,
+        LiceID bigint NOT NULL,
+        Email nvarchar(30) NULL,
+        rn int NOT NULL
+    );
+
+    INSERT INTO @Prijave(IDPrijave, LiceID, Email, rn)
+    SELECT i.IDPrijave, i.LiceID, i.Email, c.rn
+    FROM @Inserted i
+    JOIN #Cand c ON c.LiceID = i.LiceID;
+
+    /* 4) Loop: Upsert JSON za svaku prijavu */
+    DECLARE @i int = 1;
+    DECLARE @imax int = (SELECT MAX(RowId) FROM @Prijave);
+
+    WHILE @i <= @imax
+    BEGIN
+        DECLARE
+            @IDPrijave int,
+            @LiceID bigint,
+            @Email nvarchar(30),
+            @rn int;
+
+        SELECT
+            @IDPrijave = IDPrijave,
+            @LiceID = LiceID,
+            @Email = Email,
+            @rn = rn
+        FROM @Prijave
+        WHERE RowId = @i;
+
+        DECLARE @OrgId int = (SELECT TOP 1 ID FROM ppdg3p.OrgPU ORDER BY NEWID());
+        DECLARE @Vrsta int = CASE WHEN ABS(CHECKSUM(NEWID())) % 2 = 0 THEN 1 ELSE 2 END;
+        DECLARE @Osnov int = (ABS(CHECKSUM(NEWID())) % 5) + 1;
+        DECLARE @Izmena bit = CASE WHEN ABS(CHECKSUM(NEWID())) % 10 = 0 THEN 1 ELSE 0 END;
+
+        DECLARE @DatumOst date = DATEADD(day, -(ABS(CHECKSUM(NEWID())) % 730), CAST(GETDATE() AS date));
+        DECLARE @DatumPod date = DATEADD(day,  (ABS(CHECKSUM(NEWID())) % 10),  @DatumOst);
+        DECLARE @DatumDos date = DATEADD(day, 30, @DatumOst);
+
+        DECLARE @Ime nvarchar(30)     = LEFT(N'Ime' + RIGHT(N'00000' + CAST(@rn AS nvarchar(10)), 5), 30);
+        DECLARE @Prezime nvarchar(30) = LEFT(N'Prezime' + RIGHT(N'00000' + CAST(@rn AS nvarchar(10)), 5), 30);
+
+        DECLARE @kPrenosi int = 1 + (ABS(CHECKSUM(NEWID())) % @MaxPrenosi);
+        DECLARE @kDokazi  int = CASE WHEN @MaxDokazi=0 THEN 0 ELSE (ABS(CHECKSUM(NEWID())) % (@MaxDokazi+1)) END;
+        DECLARE @kUmanj   int = CASE WHEN @MaxUmanj=0  THEN 0 ELSE (ABS(CHECKSUM(NEWID())) % (@MaxUmanj+1)) END;
+
+        DECLARE @Prenosi nvarchar(max) =
+        (
+            SELECT TOP (@kPrenosi)
+                NULL AS ID,
+                DATEADD(day, (ABS(CHECKSUM(NEWID())) % 60), @DatumOst) AS DatumPrenosa,
+                CAST(100000 + (ABS(CHECKSUM(NEWID())) % 900000) AS bigint) AS ProdajnaCena,
+                DATEADD(day, -(ABS(CHECKSUM(NEWID())) % 365), @DatumOst) AS DatumSticanja,
+                CAST(50000 + (ABS(CHECKSUM(NEWID())) % 400000) AS bigint) AS NabavnaCena,
+                d.IsDigital AS IsDigital,
+
+                CASE WHEN d.IsDigital = 1
+                     THEN NULL
+                     ELSE LEFT(N'HoV ' + CAST(1000 + (ABS(CHECKSUM(NEWID())) % 9000) AS nvarchar(10)), 30)
+                END AS Naziv,
+
+                CASE WHEN d.IsDigital = 1
+                     THEN NULL
+                     ELSE 100000 + (ABS(CHECKSUM(NEWID())) % 900000)
+                END AS BrDokOPrenosu,
+
+                CASE WHEN d.IsDigital = 1 THEN NULL
+                     ELSE JSON_QUERY((
+                        SELECT TOP (1 + (ABS(CHECKSUM(NEWID())) % 3))
+                            CAST(1 + (ABS(CHECKSUM(NEWID())) % 500) AS int) AS BrojStecenihJedinica
+                        FROM (VALUES(1),(2),(3)) x(n)
+                        FOR JSON PATH
+                     ))
+                END AS DokumentiOSticanju
+            FROM (VALUES(1),(2),(3),(4),(5),(6),(7),(8)) v(n)
+            CROSS APPLY (SELECT CAST(CASE WHEN ABS(CHECKSUM(NEWID())) % 100 < 45 THEN 1 ELSE 0 END AS bit) AS IsDigital) d
+            ORDER BY v.n
+            FOR JSON PATH
+        );
+
+        DECLARE @Dokazi nvarchar(max) =
+        (
+            SELECT TOP (@kDokazi)
+                NULL AS BrojDokaza,
+                LEFT(N'Dokaz ' + CAST(v.n AS nvarchar(10)), 30) AS Naziv,
+                LEFT(N'/d/' + CAST(@IDPrijave AS nvarchar(10)) + N'_' + CAST(v.n AS nvarchar(10)) + N'.pdf', 30) AS LokacijaFajla,
+                @LiceID AS JMBG_ESB_PIB_po
+            FROM (VALUES(1),(2),(3),(4),(5)) v(n)
+            ORDER BY v.n
+            FOR JSON PATH
+        );
+
+        DECLARE @Umanjenja nvarchar(max) =
+        (
+            SELECT TOP (@kUmanj)
+                NULL AS ID,
+                DATEADD(day, -(ABS(CHECKSUM(NEWID())) % 365), @DatumOst) AS DatumUlaganja,
+
+                t.Tip AS Tip,
+
+                CASE WHEN t.Tip='KAP_GUB' THEN CAST(5000 + (ABS(CHECKSUM(NEWID())) % 50000) AS bigint) END AS IznosKapGub,
+                CASE WHEN t.Tip='KAP_GUB' THEN CAST(10000 + (ABS(CHECKSUM(NEWID())) % 90000) AS int) END AS BrojResenja,
+
+                CASE WHEN t.Tip='OSN_KAP' THEN CAST(10000 + (ABS(CHECKSUM(NEWID())) % 80000) AS bigint) END AS IznosUlozenUKapDP,
+                CASE WHEN t.Tip='OSN_KAP' THEN CAST(10000 + (ABS(CHECKSUM(NEWID())) % 80000) AS bigint) END AS IznosUlozenUKapIF,
+
+                CASE WHEN t.Tip='RES_SP' THEN CAST(20000 + (ABS(CHECKSUM(NEWID())) % 150000) AS bigint) END AS IznosUlozenihSredstava,
+                CASE WHEN t.Tip='RES_SP' THEN CAST((10 + (ABS(CHECKSUM(NEWID())) % 500)) / 10.0 AS real) END AS PovrsinaZaOslobadjanje,
+                CASE WHEN t.Tip='RES_SP' THEN CAST(CASE WHEN ABS(CHECKSUM(NEWID())) % 2 = 0 THEN 1 ELSE 0 END AS bit) END AS Domacinstvo
+            FROM (VALUES(1),(2),(3),(4),(5),(6)) v(n)
+            CROSS APPLY (
+                SELECT CASE (ABS(CHECKSUM(NEWID())) % 3)
+                    WHEN 0 THEN N'OSN_KAP'
+                    WHEN 1 THEN N'KAP_GUB'
+                    ELSE      N'RES_SP'
+                END AS Tip
+            ) t
+            ORDER BY v.n
+            FOR JSON PATH
+        );
+
+        DECLARE @JsonDoc nvarchar(max) =
+        (
+            SELECT
+                @IDPrijave AS idPrijave,
+                @DatumOst AS datumOstvarivanjaPrihoda,
+                @DatumDos AS datumDospelostiZaPodnosenjePrijave,
+                @DatumPod AS datumNacinPodnosenjaPrijave,
+                @Izmena   AS izmena,
+
+                JSON_QUERY((SELECT @OrgId AS id FOR JSON PATH, WITHOUT_ARRAY_WRAPPER)) AS organPU,
+                JSON_QUERY((
+                    SELECT
+                        @LiceID AS id,
+                        @Ime AS ime,
+                        @Prezime AS prezime,
+                        @Email AS email,
+                        N'Beograd' AS prebivalisteOstvPrih
+                    FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+                )) AS poreskiObveznik,
+                JSON_QUERY((SELECT @Vrsta AS id FOR JSON PATH, WITHOUT_ARRAY_WRAPPER)) AS vrstaPrijave,
+                JSON_QUERY((SELECT @Osnov AS id FOR JSON PATH, WITHOUT_ARRAY_WRAPPER)) AS osnovZaPrijavu,
+
+                JSON_QUERY(COALESCE(@Dokazi,    N'[]')) AS Dokazi,
+                JSON_QUERY(COALESCE(@Umanjenja, N'[]')) AS Umanjenja,
+                JSON_QUERY(COALESCE(@Prenosi,   N'[]')) AS Prenosi
+            FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
+        );
+
+        EXEC ppdg3p.UpsertPPDG3PDocumentFromJson
+            @IDPrijave = @IDPrijave,
+            @JsonDoc   = @JsonDoc,
+            @Sync      = 1;
+
+        SET @i += 1;
+    END
+
+    /* 5) Sanity check */
+    SELECT
+        (SELECT COUNT(*) FROM ppdg3p.PoreskiObveznik) AS PoreskiObveznik_cnt,
+        (SELECT COUNT(*) FROM ppdg3p.PPDG3P)          AS PPDG3P_cnt,
+        (SELECT COUNT(*) FROM ppdg3p.PPDG3P_Details)  AS PPDG3P_Details_cnt,
+        (SELECT COUNT(*) FROM ppdg3p.StavkaPrenosa)   AS StavkaPrenosa_cnt,
+        (SELECT COUNT(*) FROM ppdg3p.PrenosHartijaOdVrednosti) AS PrenosHoV_cnt,
+        (SELECT COUNT(*) FROM ppdg3p.DokumentOSticanju) AS DokumentOSticanju_cnt,
+        (SELECT COUNT(*) FROM ppdg3p.StavkaUmanjenja) AS StavkaUmanjenja_cnt,
+        (SELECT COUNT(*) FROM ppdg3p.KapitalniGubitak) AS KapitalniGubitak_cnt,
+        (SELECT COUNT(*) FROM ppdg3p.UlaganjeUOsnKap) AS UlaganjeUOsnKap_cnt,
+        (SELECT COUNT(*) FROM ppdg3p.UlaganjneUResavanjeSP) AS UlagResavanjeSP_cnt,
+        (SELECT COUNT(*) FROM ppdg3p.Dokazi)          AS Dokazi_cnt;
+END
+GO
+/****** Object:  StoredProcedure [ppdg3p].[SetHardcoded_OsnovZaPrijavu]    Script Date: 17/02/2026 12:18:21 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE   PROCEDURE [ppdg3p].[SetHardcoded_OsnovZaPrijavu]
+    @ItemsJson nvarchar(max)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    IF ISJSON(@ItemsJson) <> 1
+        THROW 52090, 'ItemsJson nije validan JSON.', 1;
+
+    DECLARE @T TABLE (ID int NOT NULL PRIMARY KEY, Naziv nvarchar(30) NOT NULL);
+
+    INSERT INTO @T(ID, Naziv)
+    SELECT TRY_CONVERT(int, JSON_VALUE(j.value, '$.id')),
+           LEFT(JSON_VALUE(j.value, '$.naziv'), 30)
+    FROM OPENJSON(@ItemsJson) j
+    WHERE JSON_VALUE(j.value, '$.id') IS NOT NULL
+      AND JSON_VALUE(j.value, '$.naziv') IS NOT NULL;
+
+    IF NOT EXISTS (SELECT 1 FROM @T)
+        THROW 52091, 'ItemsJson nema nijednu validnu stavku (id,naziv).', 1;
+
+    IF EXISTS (SELECT 1 FROM @T WHERE LTRIM(RTRIM(Naziv)) = '')
+        THROW 52092, 'Naziv ne sme biti prazan.', 1;
+
+    DECLARE @IdList nvarchar(max) = (SELECT STRING_AGG(CAST(ID AS nvarchar(20)), ',') FROM @T);
+
+    IF EXISTS (
+        SELECT 1
+        FROM ppdg3p.PPDG3P_Details d
+        WHERE d.IDOsnovaZaPrijavu IS NOT NULL
+          AND NOT EXISTS (SELECT 1 FROM @T t WHERE t.ID = d.IDOsnovaZaPrijavu)
+    )
+        THROW 52093, 'PPDG3P_Details sadrži IDOsnovaZaPrijavu vrednosti koje nisu u novom dozvoljenom setu.', 1;
+
+    DECLARE @ValuesSql nvarchar(max) =
+        (SELECT STRING_AGG('(' + CAST(ID AS nvarchar(20)) + ', N''' + REPLACE(Naziv, '''', '''''') + ''')', ',')
+         FROM @T);
+
+    DECLARE @Sql nvarchar(max);
+
+    SET @Sql = N'
+CREATE OR ALTER VIEW [ppdg3p].[vw_OsnovZaPrijavu_HC]
+AS
+SELECT v.ID, CAST(v.Naziv AS nchar(30)) AS Naziv
+FROM (VALUES ' + @ValuesSql + N') v(ID, Naziv);';
+    EXEC sys.sp_executesql @Sql;
+
+    IF EXISTS (
+        SELECT 1
+        FROM sys.check_constraints
+        WHERE name = 'CK_PPDG3P_Details_IDOsnovaZaPrijavu'
+          AND parent_object_id = OBJECT_ID('ppdg3p.PPDG3P_Details')
+    )
+        ALTER TABLE ppdg3p.PPDG3P_Details DROP CONSTRAINT CK_PPDG3P_Details_IDOsnovaZaPrijavu;
+
+    SET @Sql = N'
+ALTER TABLE ppdg3p.PPDG3P_Details WITH CHECK
+ADD CONSTRAINT CK_PPDG3P_Details_IDOsnovaZaPrijavu
+CHECK (IDOsnovaZaPrijavu IN (' + @IdList + N'));';
+    EXEC sys.sp_executesql @Sql;
+END
+GO
+/****** Object:  StoredProcedure [ppdg3p].[SetHardcoded_VrstaPrijave]    Script Date: 17/02/2026 12:18:21 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE   PROCEDURE [ppdg3p].[SetHardcoded_VrstaPrijave]
+    @ItemsJson nvarchar(max)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    IF ISJSON(@ItemsJson) <> 1
+        THROW 52080, 'ItemsJson nije validan JSON.', 1;
+
+    DECLARE @T TABLE (ID int NOT NULL PRIMARY KEY, Naziv nvarchar(30) NOT NULL);
+
+    INSERT INTO @T(ID, Naziv)
+    SELECT TRY_CONVERT(int, JSON_VALUE(j.value, '$.id')),
+           LEFT(JSON_VALUE(j.value, '$.naziv'), 30)
+    FROM OPENJSON(@ItemsJson) j
+    WHERE JSON_VALUE(j.value, '$.id') IS NOT NULL
+      AND JSON_VALUE(j.value, '$.naziv') IS NOT NULL;
+
+    IF NOT EXISTS (SELECT 1 FROM @T)
+        THROW 52081, 'ItemsJson nema nijednu validnu stavku (id,naziv).', 1;
+
+    IF EXISTS (SELECT 1 FROM @T WHERE LTRIM(RTRIM(Naziv)) = '')
+        THROW 52082, 'Naziv ne sme biti prazan.', 1;
+
+    DECLARE @IdList nvarchar(max) = (SELECT STRING_AGG(CAST(ID AS nvarchar(20)), ',') FROM @T);
+
+    IF EXISTS (
+        SELECT 1
+        FROM ppdg3p.PPDG3P_Details d
+        WHERE d.IDVrstePrijave IS NOT NULL
+          AND NOT EXISTS (SELECT 1 FROM @T t WHERE t.ID = d.IDVrstePrijave)
+    )
+        THROW 52083, 'PPDG3P_Details sadrži IDVrstePrijave vrednosti koje nisu u novom dozvoljenom setu.', 1;
+
+    DECLARE @ValuesSql nvarchar(max) =
+        (SELECT STRING_AGG('(' + CAST(ID AS nvarchar(20)) + ', N''' + REPLACE(Naziv, '''', '''''') + ''')', ',')
+         FROM @T);
+
+    DECLARE @Sql nvarchar(max);
+
+    SET @Sql = N'
+CREATE OR ALTER VIEW [ppdg3p].[vw_VrstaPrijave_HC]
+AS
+SELECT v.ID, CAST(v.Naziv AS nchar(30)) AS Naziv
+FROM (VALUES ' + @ValuesSql + N') v(ID, Naziv);';
+    EXEC sys.sp_executesql @Sql;
+
+    IF EXISTS (
+        SELECT 1
+        FROM sys.check_constraints
+        WHERE name = 'CK_PPDG3P_Details_IDVrstePrijave'
+          AND parent_object_id = OBJECT_ID('ppdg3p.PPDG3P_Details')
+    )
+        ALTER TABLE ppdg3p.PPDG3P_Details DROP CONSTRAINT CK_PPDG3P_Details_IDVrstePrijave;
+
+    SET @Sql = N'
+ALTER TABLE ppdg3p.PPDG3P_Details WITH CHECK
+ADD CONSTRAINT CK_PPDG3P_Details_IDVrstePrijave
+CHECK (IDVrstePrijave IN (' + @IdList + N'));';
+    EXEC sys.sp_executesql @Sql;
+END
+GO
+/****** Object:  StoredProcedure [ppdg3p].[UpsertPPDG3PDocumentFromJson]    Script Date: 17/02/2026 12:18:21 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE   PROCEDURE [ppdg3p].[UpsertPPDG3PDocumentFromJson]
-    @IDPrijave int,
+    @IDPrijave int = NULL,
     @JsonDoc nvarchar(max),
     @Sync bit = 1
 AS
@@ -768,7 +1131,7 @@ BEGIN
         BEGIN TRAN;
 
         /* ------------------------------------------------------------
-           1) HEADER: PPDG3P
+           1) HEADER
         ------------------------------------------------------------ */
         DECLARE
             @DatumOst date = TRY_CONVERT(date, JSON_VALUE(@JsonDoc, '$.datumOstvarivanjaPrihoda')),
@@ -779,11 +1142,43 @@ BEGIN
             @IDOrganaPoreske int   = TRY_CONVERT(int,    JSON_VALUE(@JsonDoc, '$.organPU.id')),
             @IDPoreskogObveznika bigint = TRY_CONVERT(bigint, JSON_VALUE(@JsonDoc, '$.poreskiObveznik.id')),
             @IDVrstePrijave int    = TRY_CONVERT(int,    JSON_VALUE(@JsonDoc, '$.vrstaPrijave.id')),
-            @IDOsnovaZaPrijavu int = TRY_CONVERT(int,    JSON_VALUE(@JsonDoc, '$.osnovZaPrijavu.id')),
+            @IDOsnovaZaPrijavu int = TRY_CONVERT(int,    JSON_VALUE(@JsonDoc, '$.osnovZaPrijavu.id'));
 
-            -- opcionalno, jer u PPDG3P postoji Email_lice
-            @EmailLice nvarchar(50) = JSON_VALUE(@JsonDoc, '$.poreskiObveznik.email');
+           -- Validate IDVrstePrijave: must be 1 or 2
+    IF @IDVrstePrijave IS NOT NULL AND @IDVrstePrijave NOT IN (1, 2)
+        THROW 52015, 'Врста пријаве мора бити изабрана. Дозвољене вредности: 1 (Коначна     
+        пријава) или 2 (Измењена пријава).', 1;
 
+    -- Validate IDOsnovaZaPrijavu: must be 1-5
+    IF @IDOsnovaZaPrijavu IS NOT NULL AND @IDOsnovaZaPrijavu NOT IN (1, 2, 3, 4, 5)
+        THROW 52016, 'Основ за пријаву мора бити изабран. Дозвољене вредности: 1-5.', 1;
+         
+        -- Validate dates: none can be in the future
+    IF @DatumOst IS NULL OR @DatumOst > CAST(GETDATE() AS DATE)
+        THROW 52017, 'Датум остваривања прихода мора бити изабран и не може бити у будућности.', 1;
+
+    IF @DatumDos IS NULL OR @DatumDos > CAST(GETDATE() AS DATE)
+        THROW 52018, 'Датум доспелости за подношење пријаве мора бити изабран и не може бити у будућности.', 1;
+
+    IF @DatumPod IS NULL OR @DatumPod > CAST(GETDATE() AS DATE)
+        THROW 52019, 'Датум подношења пријаве мора бити изабран и не може бити у будућности.', 1;
+
+    -- Validate date chronological order: DatumOst <= DatumDos <= DatumPod
+    IF @DatumOst IS NOT NULL AND @DatumDos IS NOT NULL AND @DatumOst > @DatumDos
+        THROW 52020, 'Датум остваривања прихода мора бити пре или једнак датуму доспелости за подношење.', 1;
+
+    IF @DatumDos IS NOT NULL AND @DatumPod IS NOT NULL AND @DatumDos > @DatumPod
+        THROW 52021, 'Датум доспелости за подношење мора бити пре или једнак датуму подношења пријаве.', 1;
+
+    IF @DatumOst IS NOT NULL AND @DatumPod IS NOT NULL AND @DatumOst > @DatumPod
+        THROW 52022, 'Датум остваривања прихода мора бити пре или једнак датуму подношења пријаве.', 1;
+
+    IF @IDOrganaPoreske IS NULL
+        THROW 52023, 'Орган пореске управе мора бити изабран.', 1;
+
+    IF (@IDPoreskogObveznika IS NULL OR @IDPoreskogObveznika <= 0)    
+      THROW 52023, 'ЈМБГ/ЕСБ/ПИБ мора бити валидан број (без слова и специјалних знакова).', 1;
+            
         IF @Sync = 1 AND (
             @DatumOst IS NULL OR @DatumDos IS NULL OR @DatumPod IS NULL OR @Izmena IS NULL OR
             @IDOrganaPoreske IS NULL OR @IDPoreskogObveznika IS NULL OR
@@ -791,58 +1186,157 @@ BEGIN
         )
             THROW 52011, 'Header: nedostaju obavezna polja u JSON-u (PUT mode).', 1;
 
-        UPDATE p
-        SET
-            DatumOstvarivanjaPrihoda = COALESCE(@DatumOst, p.DatumOstvarivanjaPrihoda),
-            DatumDospelostiZaPodnosenjePrijave = COALESCE(@DatumDos, p.DatumDospelostiZaPodnosenjePrijave),
-            DatumNacinPodnosenjaPrijave = COALESCE(@DatumPod, p.DatumNacinPodnosenjaPrijave),
-            Izmena = COALESCE(@Izmena, p.Izmena),
-            IDOrganaPoreske = COALESCE(@IDOrganaPoreske, p.IDOrganaPoreske),
-            IDPoreskogObveznika = COALESCE(@IDPoreskogObveznika, p.IDPoreskogObveznika),
-            IDVrstePrijave = COALESCE(@IDVrstePrijave, p.IDVrstePrijave),
-            IDOsnovaZaPrijavu = COALESCE(@IDOsnovaZaPrijavu, p.IDOsnovaZaPrijavu),
-            Email_lice = COALESCE(@EmailLice, p.Email_lice)
-        FROM ppdg3p.PPDG3P p
-        WHERE p.ID = @IDPrijave;
-
-        IF @@ROWCOUNT = 0
-            THROW 52012, 'Ne postoji PPDG3P sa datim @IDPrijave.', 1;
-
         /* ------------------------------------------------------------
-           2) PORESKI OBVEZNIK (usklađeno sa šemom)
-              - nema PravniStatus u tvojoj tabeli, pa ga ne diramo
-              - opciono update ime/prezime/email ako postoji u JSON-u
+           1a) ENSURE LICE + PORESKI OBVEZNIK EXIST
         ------------------------------------------------------------ */
         DECLARE
             @PO_Ime nvarchar(100) = JSON_VALUE(@JsonDoc, '$.poreskiObveznik.ime'),
             @PO_Prezime nvarchar(100) = JSON_VALUE(@JsonDoc, '$.poreskiObveznik.prezime'),
-            @PO_Email nvarchar(200) = JSON_VALUE(@JsonDoc, '$.poreskiObveznik.email');
+            @PO_Prebivaliste nvarchar(50) = JSON_VALUE(@JsonDoc, '$.poreskiObveznik.prebivalisteOstvPrih'),
+            @PO_Email nvarchar(30) = LEFT(JSON_VALUE(@JsonDoc, '$.poreskiObveznik.email'), 30),
+            @PO_Telefon nvarchar(30) = LEFT(JSON_VALUE(@JsonDoc, '$.poreskiObveznik.telefon'), 30),
+            @PO_Adresa nvarchar(50) = LEFT(JSON_VALUE(@JsonDoc, '$.poreskiObveznik.adresa'), 50),
+            @PO_Drzava nvarchar(50) = LEFT(JSON_VALUE(@JsonDoc, '$.poreskiObveznik.drzava'), 50);
+
+            -- Ime: required field
+        IF @PO_Ime IS NULL OR LTRIM(RTRIM(@PO_Ime)) = ''
+            THROW 52026, 'Име је обавезно поље.', 1;
+
+        -- Prezime: required field
+        IF @PO_Prezime IS NULL OR LTRIM(RTRIM(@PO_Prezime)) = ''
+            THROW 52027, 'Презиме је обавезно поље.', 1;
+
+        -- Ime: format validation
+        IF @PO_Ime LIKE '%[0-9]%' OR
+        @PO_Ime LIKE '%[@#$%^&*()+=]%' OR
+        @PO_Ime LIKE '%[{}[\]<>]%' OR
+        @PO_Ime LIKE '%[.,:;!?/\|~`"_]%'
+            THROW 52028, 'Име може садржати само слова (без бројева и специјалних знакова).', 1;   
+
+        -- Prezime: format validation
+        IF @PO_Prezime LIKE '%[0-9]%' OR
+        @PO_Prezime LIKE '%[@#$%^&*()+=]%' OR
+        @PO_Prezime LIKE '%[{}[\]<>]%' OR
+        @PO_Prezime LIKE '%[.,:;!?/\|~`"_]%'
+            THROW 52029, 'Презиме може садржати само слова (без бројева и специјалних знакова).', 1;
+
+        IF @PO_Adresa IS NULL OR LTRIM(RTRIM(@PO_Adresa)) = ''
+            THROW 52030, 'Адреса је обавезно поље.', 1;
+            
+        IF @PO_Prebivaliste IS NULL OR LTRIM(RTRIM(@PO_Prebivaliste)) = ''
+            THROW 52031, 'Пребивалиште је обавезно поље.', 1;
+
+        -- Prezime: required field
+        IF @PO_Drzava IS NULL OR LTRIM(RTRIM(@PO_Drzava)) = ''
+            THROW 52032, 'Država је обавезно поље.', 1;
+
+        -- Ime: format validation
+        IF @PO_Drzava LIKE '%[0-9]%' OR
+        @PO_Drzava LIKE '%[@#$%^&*()+=]%' OR
+        @PO_Drzava LIKE '%[{}[\]<>]%' OR
+        @PO_Drzava LIKE '%[.,:;!?/\|~`"_]%'
+            THROW 52033, 'Država може садржати само слова (без бројева и специјалних знакова).', 1;   
+
+        IF @PO_Telefon IS NULL OR LTRIM(RTRIM(@PO_Telefon)) = ''
+            THROW 520234, 'Телефон је обавезно поље.', 1;
+
+        -- Validate Telefon: optional +, then only digits, spaces, hyphens, parentheses
+        IF @PO_Telefon IS NOT NULL AND LTRIM(RTRIM(@PO_Telefon)) != '' AND (
+            -- Remove allowed characters and check if anything remains
+            REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@PO_Telefon, '+', ''), ' ', ''), '-', ''), '(',
+        ''), ')', '') LIKE '%[^0-9]%' OR
+            -- Check that + is only at the beginning
+            (CHARINDEX('+', @PO_Telefon) > 1)
+        )
+            THROW 52035, 'Телефон може садржати само бројеве, размаке, цртице и опционо + на почетку.', 1;
+
+        IF @PO_Email IS NULL OR LTRIM(RTRIM(@PO_Email)) = ''
+            THROW 52036, 'Електронска пошта је обавезно поље.', 1;
+
+        -- Validate Email: must have valid email format (local@domain.tld)
+        IF @PO_Email IS NOT NULL AND LTRIM(RTRIM(@PO_Email)) != '' AND (
+            @PO_Email NOT LIKE '%_@__%.__%' OR           -- Basic pattern:      something@something.something
+            @PO_Email LIKE '%[@]%[@]%' OR                 -- No multiple @
+            @PO_Email LIKE '[@]%' OR                      -- @ not at start
+            @PO_Email LIKE '%[@]' OR                      -- @ not at end
+            @PO_Email LIKE '%[<>()[\]\\,;: ]%'           -- No invalid characters
+        )
+            THROW 52037, 'Електронска пошта мора бити у валидном формату (пример: korisnik@domen.com).', 1;
 
         IF @IDPoreskogObveznika IS NOT NULL
         BEGIN
-            UPDATE po
-            SET
-                po.Ime = COALESCE(CAST(LEFT(@PO_Ime, 30) AS nchar(30)), po.Ime),
-                po.Prezime = COALESCE(CAST(LEFT(@PO_Prezime, 30) AS nchar(30)), po.Prezime),
-                po.Email = CASE
-                              WHEN @PO_Email IS NULL THEN po.Email
-                              ELSE CAST(LEFT(@PO_Email, 30) AS nchar(30))
-                           END
-            FROM ppdg3p.PoreskiObveznik po
-            WHERE po.[JMBG/ESB/PIB_lice] = @IDPoreskogObveznika;
+            -- Ensure Lice exists
+            IF NOT EXISTS (SELECT 1 FROM ppdg3p.Lice WHERE [JMBG/ESB/PIB] = @IDPoreskogObveznika)
+                INSERT INTO ppdg3p.Lice ([JMBG/ESB/PIB], Telefon, Adresa, Drzava, Email)
+                VALUES (@IDPoreskogObveznika, @PO_Telefon, @PO_Adresa, @PO_Drzava, @PO_Email);
+            ELSE
+                UPDATE ppdg3p.Lice SET
+                    Telefon = COALESCE(@PO_Telefon, Telefon),
+                    Adresa  = COALESCE(@PO_Adresa,  Adresa),
+                    Drzava  = COALESCE(@PO_Drzava,  Drzava),
+                    Email   = COALESCE(@PO_Email,   Email)
+                WHERE [JMBG/ESB/PIB] = @IDPoreskogObveznika;
+
+            -- Ensure PoreskiObveznik exists
+            IF NOT EXISTS (SELECT 1 FROM ppdg3p.PoreskiObveznik WHERE [JMBG/ESB/PIB_lice] = @IDPoreskogObveznika)
+                INSERT INTO ppdg3p.PoreskiObveznik ([JMBG/ESB/PIB_lice], Ime, Prezime, PrebivalisteOstvPrih)
+                VALUES (@IDPoreskogObveznika, CAST(LEFT(@PO_Ime, 30) AS nchar(30)), CAST(LEFT(@PO_Prezime, 30) AS nchar(30)), LEFT(@PO_Prebivaliste, 50));
+            ELSE
+                UPDATE ppdg3p.PoreskiObveznik SET
+                    Ime = COALESCE(CAST(LEFT(@PO_Ime, 30) AS nchar(30)), Ime),
+                    Prezime = COALESCE(CAST(LEFT(@PO_Prezime, 30) AS nchar(30)), Prezime),
+                    PrebivalisteOstvPrih = COALESCE(LEFT(@PO_Prebivaliste, 50), PrebivalisteOstvPrih)
+                WHERE [JMBG/ESB/PIB_lice] = @IDPoreskogObveznika;
+        END
+
+        /* ------------------------------------------------------------
+           1b) PPDG3P: create or update
+        ------------------------------------------------------------ */
+        IF @IDPrijave IS NULL
+        BEGIN
+            -- CREATE mode: insert new PPDG3P row
+            INSERT INTO ppdg3p.PPDG3P (IDPoreskogObveznika, Email_lice)
+            VALUES (@IDPoreskogObveznika, @PO_Email);
+
+            SET @IDPrijave = SCOPE_IDENTITY();
+        END
+        ELSE
+        BEGIN
+            -- UPDATE mode: PPDG3P must exist
+            UPDATE p
+            SET p.IDPoreskogObveznika = COALESCE(@IDPoreskogObveznika, p.IDPoreskogObveznika)
+            FROM ppdg3p.PPDG3P p
+            WHERE p.ID = @IDPrijave;
 
             IF @@ROWCOUNT = 0
-                THROW 52013, 'Ne postoji PoreskiObveznik sa datim ID iz JSON-a.', 1;
+                THROW 52012, 'Ne postoji PPDG3P sa datim @IDPrijave.', 1;
+        END
 
-            -- Ako želiš da i Lice.Email bude konzistentan (opciono)
-            IF @PO_Email IS NOT NULL
-            BEGIN
-                UPDATE l
-                SET l.Email = LEFT(@PO_Email, 30)
-                FROM ppdg3p.Lice l
-                WHERE l.[JMBG/ESB/PIB] = @IDPoreskogObveznika;
-                -- ovde ne bacam error ako nema reda, jer možeš imati stare podatke
-            END
+        -- Update/insert Details
+        UPDATE pd
+        SET
+            pd.DatumOstvarivanjaPrihoda = COALESCE(@DatumOst, pd.DatumOstvarivanjaPrihoda),
+            pd.DatumDospelostiZaPodnosenjePrijave = COALESCE(@DatumDos, pd.DatumDospelostiZaPodnosenjePrijave),
+            pd.DatumNacinPodnosenjaPrijave = COALESCE(@DatumPod, pd.DatumNacinPodnosenjaPrijave),
+            pd.Izmena = COALESCE(@Izmena, pd.Izmena),
+            pd.IDOrganaPoreske = COALESCE(@IDOrganaPoreske, pd.IDOrganaPoreske),
+            pd.IDVrstePrijave = COALESCE(@IDVrstePrijave, pd.IDVrstePrijave),
+            pd.IDOsnovaZaPrijavu = COALESCE(@IDOsnovaZaPrijavu, pd.IDOsnovaZaPrijavu)
+        FROM ppdg3p.PPDG3P_Details pd
+        WHERE pd.ID = @IDPrijave;
+
+        IF @@ROWCOUNT = 0
+        BEGIN
+            IF (
+                @DatumOst IS NULL OR @DatumDos IS NULL OR @DatumPod IS NULL OR @Izmena IS NULL OR
+                @IDOrganaPoreske IS NULL OR @IDVrstePrijave IS NULL OR @IDOsnovaZaPrijavu IS NULL
+            )
+                THROW 52014, 'PPDG3P_Details ne postoji za ovu prijavu, a JSON nema sva obavezna polja da bi se napravio red.', 1;
+
+            INSERT ppdg3p.PPDG3P_Details
+                (ID, DatumOstvarivanjaPrihoda, DatumDospelostiZaPodnosenjePrijave, DatumNacinPodnosenjaPrijave, Izmena, IDOrganaPoreske, IDVrstePrijave, IDOsnovaZaPrijavu)
+            VALUES
+                (@IDPrijave, @DatumOst, @DatumDos, @DatumPod, @Izmena, @IDOrganaPoreske, @IDVrstePrijave, @IDOsnovaZaPrijavu);
         END
 
         /* ------------------------------------------------------------
@@ -890,16 +1384,136 @@ BEGIN
         EXEC sys.sp_set_session_context @key = N'ppdg3p_allow_dokazi_jmbg_update', @value = NULL;
 
         /* ------------------------------------------------------------
-           4) PRENOSI + HARTIJE + DOKUMENTI O STICANJU
+           4) PRENOSI + HARTIJE + DOKUMENTI O STICANJU  (FIXED)
         ------------------------------------------------------------ */
         DECLARE @PrenosMap TABLE (
             ID int NOT NULL PRIMARY KEY,
+            IDPrijave int NOT NULL,
             IsDigital bit NOT NULL,
             Naziv nvarchar(30) NULL,
             BrDokOPrenosu int NULL,
+            BrojPrenetihHOV int NULL,
             DokumentiJson nvarchar(max) NULL
         );
 
+        DECLARE @ErrorMsg nvarchar(500);
+
+        -- Validate Prenosi fields first (check ALL rows, not just first)
+        ;WITH SrcValidate AS (
+            SELECT
+                ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS RowNum,
+                DatumPrenosa,
+                ProdajnaCena,
+                DatumSticanja,
+                NabavnaCena,
+                Naziv,
+                BrDokOPrenosu,
+                BrojPrenetihHOV,
+                IsDigital,
+                DokumentiJson
+            FROM OPENJSON(@JsonDoc, N'$.Prenosi')
+            WITH (
+                DatumPrenosa date N'$.DatumPrenosa',
+                ProdajnaCena bigint N'$.ProdajnaCena',
+                DatumSticanja date N'$.DatumSticanja',
+                NabavnaCena bigint N'$.NabavnaCena',
+                Naziv nvarchar(30) N'$.Naziv',
+                BrDokOPrenosu int N'$.BrDokOPrenosu',
+                BrojPrenetihHOV int N'$.BrojPrenetihHOV',
+                IsDigital bit N'$.IsDigital',
+                DokumentiJson nvarchar(max) N'$.DokumentiOSticanju' AS JSON
+            )
+        )
+        SELECT TOP 1
+            @ErrorMsg =
+                N'Ставка преноса #' + CAST(RowNum AS nvarchar(10)) + N': ' +
+                CASE
+                    -- Check required fields (NULL means either missing or invalid format)
+                    WHEN DatumPrenosa IS NULL THEN N'Датум преноса је обавезно поље и мора бити валидан датум.'
+                    WHEN DatumSticanja IS NULL THEN N'Датум стицања је обавезно поље и мора бити валидан датум.'
+                    WHEN DatumSticanja > DatumPrenosa THEN N'Датум стицања мора бити пре илиједнак датуму преноса.'
+                    WHEN ProdajnaCena IS NULL THEN N'Продајна цена је обавезно поље и мора бити валидан број.'
+                    WHEN ProdajnaCena <= 0 THEN N'Продајна цена мора бити позитиван број.'
+                    WHEN NabavnaCena IS NULL THEN N'Набавна цена је обавезно поље и мора бити валидан број.'
+                    WHEN NabavnaCena <= 0 THEN N'Набавна цена мора бити позитиван број.'
+                    -- HoV-specific fields (only for non-digital entries)
+                    WHEN COALESCE(IsDigital, 0) = 0 AND (Naziv IS NULL OR LTRIM(RTRIM(Naziv)) = '') THEN N'Назив емитента је обавезно поље.'
+                    WHEN COALESCE(IsDigital, 0) = 0 AND BrDokOPrenosu IS NULL THEN N'Број документа о преносу је обавезно поље и мора бити валидан број.'
+                    WHEN COALESCE(IsDigital, 0) = 0 AND BrDokOPrenosu <= 0 THEN N'Број документа о преносу мора бити позитиван број.'
+                    WHEN COALESCE(IsDigital, 0) = 0 AND BrojPrenetihHOV IS NULL THEN N'Број пренетих ХОВ је обавезно поље и мора бити валидан број.'
+                    WHEN COALESCE(IsDigital, 0) = 0 AND BrojPrenetihHOV <= 0 THEN N'Број пренетих ХОВ мора бити позитиван број.'
+                    WHEN COALESCE(IsDigital, 0) = 0 AND (DokumentiJson IS NULL OR DokumentiJson = N'[]') THEN N'Мора постојати најмање један документ о стицању.'
+                    ELSE NULL
+                END
+        FROM SrcValidate
+        WHERE
+            DatumPrenosa IS NULL OR
+            DatumSticanja IS NULL OR
+            DatumSticanja > DatumPrenosa OR
+            ProdajnaCena IS NULL OR ProdajnaCena <= 0 OR
+            NabavnaCena IS NULL OR NabavnaCena <= 0 OR
+            (COALESCE(IsDigital, 0) = 0 AND (Naziv IS NULL OR LTRIM(RTRIM(Naziv)) = '')) OR
+            (COALESCE(IsDigital, 0) = 0 AND (BrDokOPrenosu IS NULL OR BrDokOPrenosu <= 0)) OR
+            (COALESCE(IsDigital, 0) = 0 AND (BrojPrenetihHOV IS NULL OR BrojPrenetihHOV <= 0)) OR
+            (COALESCE(IsDigital, 0) = 0 AND (DokumentiJson IS NULL OR DokumentiJson = N'[]'));
+
+        IF @ErrorMsg IS NOT NULL
+            THROW 52032, @ErrorMsg, 1;
+
+        -- Validate DokumentiOSticanju fields for each non-digital prenos
+        ;WITH SrcDokValidate AS (
+            SELECT
+                p.RowNum AS PrenosRowNum,
+                ROW_NUMBER() OVER (PARTITION BY p.RowNum ORDER BY (SELECT NULL)) AS DokRowNum,
+                x.DatumSticanja,
+                x.BrojDokOSticanju,
+                x.BrojStecenihJedinica,
+                x.NabavnaCena
+            FROM (
+                SELECT
+                    ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS RowNum,
+                    IsDigital,
+                    DokumentiJson
+                FROM OPENJSON(@JsonDoc, N'$.Prenosi')
+                WITH (
+                    IsDigital bit N'$.IsDigital',
+                    DokumentiJson nvarchar(max) N'$.DokumentiOSticanju' AS JSON
+                )
+                WHERE COALESCE(IsDigital, 0) = 0
+            ) p
+            CROSS APPLY OPENJSON(p.DokumentiJson)
+            WITH (
+                DatumSticanja date N'$.DatumSticanja',
+                BrojDokOSticanju int N'$.BrojDokOSticanju',
+                BrojStecenihJedinica int N'$.BrojStecenihJedinica',
+                NabavnaCena bigint N'$.NabavnaCena'
+            ) x
+        )
+        SELECT TOP 1
+            @ErrorMsg =
+                N'Документ о стицању #' + CAST(DokRowNum AS nvarchar(10)) +
+                N' (пренос #' + CAST(PrenosRowNum AS nvarchar(10)) + N'): ' +
+                CASE
+                    WHEN DatumSticanja IS NULL THEN N'Датум стицања је обавезно поље и мора бити валидан датум.'
+                    WHEN BrojDokOSticanju IS NULL THEN N'Број документа о стицању је обавезно поље и мора бити валидан број.'
+                    WHEN BrojDokOSticanju <= 0 THEN N'Број документа о стицању мора бити позитиван број.'
+                    WHEN BrojStecenihJedinica IS NULL THEN N'Број стечених ХОВ је обавезно поље и мора бити валидан број.'
+                    WHEN BrojStecenihJedinica <= 0 THEN N'Број стечених ХОВ мора бити позитиван број.'
+                    WHEN NabavnaCena IS NULL THEN N'Набавна цена је обавезно поље и мора бити валидан број.'
+                    WHEN NabavnaCena <= 0 THEN N'Набавна цена мора бити позитиван број.'
+                    ELSE NULL
+                END
+        FROM SrcDokValidate
+        WHERE
+            DatumSticanja IS NULL OR
+            BrojDokOSticanju IS NULL OR BrojDokOSticanju <= 0 OR
+            BrojStecenihJedinica IS NULL OR BrojStecenihJedinica <= 0 OR
+            NabavnaCena IS NULL OR NabavnaCena <= 0;
+
+        IF @ErrorMsg IS NOT NULL
+            THROW 52034, @ErrorMsg, 1;
+
+        -- Now do the MERGE with a fresh CTE
         ;WITH Src AS (
             SELECT
                 ID,
@@ -910,6 +1524,7 @@ BEGIN
                 IsDigital = COALESCE(IsDigital, CAST(0 as bit)),
                 Naziv,
                 BrDokOPrenosu,
+                BrojPrenetihHOV,
                 DokumentiJson
             FROM OPENJSON(@JsonDoc, '$.Prenosi')
             WITH (
@@ -921,6 +1536,7 @@ BEGIN
                 IsDigital bit '$.IsDigital',
                 Naziv nvarchar(30) '$.Naziv',
                 BrDokOPrenosu int '$.BrDokOPrenosu',
+                BrojPrenetihHOV int '$.BrojPrenetihHOV',
                 DokumentiJson nvarchar(max) '$.DokumentiOSticanju' AS JSON
             )
         )
@@ -939,11 +1555,13 @@ BEGIN
             VALUES (s.DatumPrenosa, s.ProdajnaCena, s.DatumSticanja, s.NabavnaCena, @IDPrijave, s.IsDigital)
         OUTPUT
             inserted.ID,
+            inserted.IDPrijave,
             inserted.PrenosPravaUdelaDigImov,
             s.Naziv,
             s.BrDokOPrenosu,
+            s.BrojPrenetihHOV,
             s.DokumentiJson
-        INTO @PrenosMap(ID, IsDigital, Naziv, BrDokOPrenosu, DokumentiJson);
+        INTO @PrenosMap(ID, IDPrijave, IsDigital, Naziv, BrDokOPrenosu, BrojPrenetihHOV, DokumentiJson);
 
         IF @Sync = 1
         BEGIN
@@ -953,41 +1571,57 @@ BEGIN
               AND NOT EXISTS (SELECT 1 FROM @PrenosMap m WHERE m.ID = sp.ID);
         END
 
-        -- DIGITAL: obriši hartije (dokumenti idu CASCADE)
+        -- Obrisi HoV za digital prenose (sa istom prijavom)
         DELETE h
         FROM ppdg3p.PrenosHartijaOdVrednosti h
-        WHERE EXISTS (SELECT 1 FROM @PrenosMap m WHERE m.ID = h.IDStavkePrenosa AND m.IsDigital = 1);
+        WHERE h.IDPrijave = @IDPrijave
+          AND EXISTS (SELECT 1 FROM @PrenosMap m WHERE m.ID = h.IDStavkePrenosa AND m.IsDigital = 1);
 
-        -- Upsert hartije samo za IsDigital=0
+        -- MERGE HoV po KOMPOZITNOM kljucu (IDStavkePrenosa, IDPrijave) i INSERT sa IDPrijave
         MERGE ppdg3p.PrenosHartijaOdVrednosti AS t
         USING (
-            SELECT ID, Naziv, BrDokOPrenosu
+            SELECT ID, IDPrijave, Naziv, BrDokOPrenosu, BrojPrenetihHOV
             FROM @PrenosMap
             WHERE IsDigital = 0
         ) AS s
           ON t.IDStavkePrenosa = s.ID
+         AND t.IDPrijave = s.IDPrijave
         WHEN MATCHED THEN
             UPDATE SET
                 t.Naziv = CAST(s.Naziv AS nchar(30)),
-                t.BrDokOPrenosu = s.BrDokOPrenosu
+                t.BrDokOPrenosu = s.BrDokOPrenosu,
+                t.BrPrenetihHOV = COALESCE(s.BrojPrenetihHOV, 0)
         WHEN NOT MATCHED BY TARGET THEN
-            INSERT (IDStavkePrenosa, Naziv, BrDokOPrenosu)
-            VALUES (s.ID, CAST(s.Naziv AS nchar(30)), s.BrDokOPrenosu);
+            INSERT (IDStavkePrenosa, IDPrijave, Naziv, BrDokOPrenosu, BrPrenetihHOV)
+            VALUES (s.ID, s.IDPrijave, CAST(s.Naziv AS nchar(30)), s.BrDokOPrenosu, COALESCE(s.BrojPrenetihHOV, 0));
 
-        -- Replace dokumenti o sticanju za hartije iz JSON-a
+        -- DokOSticanju: brisi samo za ovu prijavu i te prenose
         DELETE d
         FROM ppdg3p.DokumentOSticanju d
-        WHERE EXISTS (SELECT 1 FROM @PrenosMap m WHERE m.IsDigital = 0 AND m.ID = d.IDPrenHartVred);
+        WHERE d.IDPrijave = @IDPrijave
+          AND EXISTS (SELECT 1 FROM @PrenosMap m WHERE m.IsDigital = 0 AND m.ID = d.IDPrenHartVred);
 
-        INSERT ppdg3p.DokumentOSticanju (BrojStecenihJedinica, IDPrenHartVred)
-        SELECT x.BrojStecenihJedinica, m.ID
+        -- INSERT DokOSticanju: OBAVEZNO upisi IDPrijave
+        INSERT ppdg3p.DokumentOSticanju (DatumSticanja, ID, BrojStecenihJedinica, NabavnaCena, IDPrenHartVred, IDPrijave)
+        SELECT
+            x.DatumSticanja,
+            COALESCE(x.ID, 0),
+            x.BrojStecenihJedinica,
+            COALESCE(x.NabavnaCena, 0),
+            m.ID,
+            m.IDPrijave
         FROM @PrenosMap m
         CROSS APPLY OPENJSON(m.DokumentiJson)
-        WITH (BrojStecenihJedinica int '$.BrojStecenihJedinica') x
+        WITH (
+            DatumSticanja date '$.DatumSticanja',
+            ID int '$.BrojDokOSticanju',
+            BrojStecenihJedinica int '$.BrojStecenihJedinica',
+            NabavnaCena bigint '$.NabavnaCena'
+        ) x
         WHERE m.IsDigital = 0;
 
         /* ------------------------------------------------------------
-           5) UMANJENJA + SUBTIPOVI
+           5) UMANJENJA + SUBTIPOVI  (FIXED)
         ------------------------------------------------------------ */
         DECLARE @UmanjMap TABLE (
             ID int NOT NULL PRIMARY KEY,
@@ -1000,6 +1634,72 @@ BEGIN
             PovrsinaZaOslobadjanje real NULL,
             Domacinstvo bit NULL
         );
+
+        -- Validate Umanjenja fields (per-type); numeric fields parsed via nvarchar + TRY_CONVERT
+        SET @ErrorMsg = NULL;
+        ;WITH SrcUmanjValidate AS (
+            SELECT
+                ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS RowNum,
+                DatumUlaganja,
+                UPPER(TipRaw) AS Tip,
+                IznosKapGub,
+                BrojResenja,
+                IznosUlozenUKapDP,
+                IznosUlozenUKapIF,
+                IznosUlozenihSredstava,
+                PovrsinaZaOslobadjanje
+            FROM OPENJSON(@JsonDoc, '$.Umanjenja')
+            WITH (
+                DatumUlaganja          date         '$.DatumUlaganja',
+                TipRaw                 nvarchar(20) '$.Tip',
+                IznosKapGub            nvarchar(30) '$.IznosKapGub',
+                BrojResenja            nvarchar(20) '$.BrojResenja',
+                IznosUlozenUKapDP      nvarchar(30) '$.IznosUlozenUKapDP',
+                IznosUlozenUKapIF      nvarchar(30) '$.IznosUlozenUKapIF',
+                IznosUlozenihSredstava nvarchar(30) '$.IznosUlozenihSredstava',
+                PovrsinaZaOslobadjanje nvarchar(30) '$.PovrsinaZaOslobadjanje'
+            )
+        )
+        SELECT TOP 1
+            @ErrorMsg =
+                N'Ставка умањења #' + CAST(RowNum AS nvarchar(10)) + N': ' +
+                CASE
+                    WHEN DatumUlaganja IS NULL THEN N'Датум улагања је обавезно поље и мора бити валидан датум.'
+                    -- KAP_GUB
+                    WHEN Tip = 'KAP_GUB' AND BrojResenja IS NULL THEN N'Број решења је обавезно поље.'
+                    WHEN Tip = 'KAP_GUB' AND TRY_CONVERT(int, BrojResenja) IS NULL THEN N'Број решења мора бити валидан број.'
+                    WHEN Tip = 'KAP_GUB' AND TRY_CONVERT(int, BrojResenja) <= 0 THEN N'Број решења мора бити позитиван број.'
+                    WHEN Tip = 'KAP_GUB' AND IznosKapGub IS NULL THEN N'Износ капиталног губитка је обавезно поље.'
+                    WHEN Tip = 'KAP_GUB' AND TRY_CONVERT(bigint, IznosKapGub) IS NULL THEN N'Износ капиталног губитка мора бити валидан број.'
+                    WHEN Tip = 'KAP_GUB' AND TRY_CONVERT(bigint, IznosKapGub) <= 0 THEN N'Износ капиталног губитка мора бити позитиван број.'
+                    -- OSN_KAP
+                    WHEN Tip = 'OSN_KAP' AND IznosUlozenUKapDP IS NULL THEN N'Износ у капитал привредног друштва је обавезно поље.'
+                    WHEN Tip = 'OSN_KAP' AND TRY_CONVERT(bigint, IznosUlozenUKapDP) IS NULL THEN N'Износ у капитал привредног друштва мора бити валидан број.'
+                    WHEN Tip = 'OSN_KAP' AND TRY_CONVERT(bigint, IznosUlozenUKapDP) <= 0 THEN N'Износ у капитал привредног друштва мора бити позитиван број.'
+                    WHEN Tip = 'OSN_KAP' AND IznosUlozenUKapIF IS NULL THEN N'Износ у капитал инвестиционог фонда је обавезно поље.'
+                    WHEN Tip = 'OSN_KAP' AND TRY_CONVERT(bigint, IznosUlozenUKapIF) IS NULL THEN N'Износ у капитал инвестиционог фонда мора бити валидан број.'
+                    WHEN Tip = 'OSN_KAP' AND TRY_CONVERT(bigint, IznosUlozenUKapIF) <= 0 THEN N'Износ у капитал инвестиционог фонда мора бити позитиван број.'
+                    -- RES_SP
+                    WHEN Tip = 'RES_SP' AND IznosUlozenihSredstava IS NULL THEN N'Износ уложених средстава је обавезно поље.'
+                    WHEN Tip = 'RES_SP' AND TRY_CONVERT(bigint, IznosUlozenihSredstava) IS NULL THEN N'Износ уложених средстава мора бити валидан број.'
+                    WHEN Tip = 'RES_SP' AND TRY_CONVERT(bigint, IznosUlozenihSredstava) <= 0 THEN N'Износ уложених средстава мора бити позитиван број.'
+                    WHEN Tip = 'RES_SP' AND PovrsinaZaOslobadjanje IS NULL THEN N'Површина за ослобађање је обавезно поље.'
+                    WHEN Tip = 'RES_SP' AND TRY_CONVERT(real, PovrsinaZaOslobadjanje) IS NULL THEN N'Површина за ослобађање мора бити валидан број.'
+                    WHEN Tip = 'RES_SP' AND TRY_CONVERT(real, PovrsinaZaOslobadjanje) <= 0 THEN N'Површина за ослобађање мора бити позитиван број.'
+                    ELSE NULL
+                END
+        FROM SrcUmanjValidate
+        WHERE
+            DatumUlaganja IS NULL OR
+            (Tip = 'KAP_GUB' AND (BrojResenja IS NULL OR TRY_CONVERT(int, BrojResenja) IS NULL OR TRY_CONVERT(int, BrojResenja) <= 0)) OR
+            (Tip = 'KAP_GUB' AND (IznosKapGub IS NULL OR TRY_CONVERT(bigint, IznosKapGub) IS NULL OR TRY_CONVERT(bigint, IznosKapGub) <= 0)) OR
+            (Tip = 'OSN_KAP' AND (IznosUlozenUKapDP IS NULL OR TRY_CONVERT(bigint, IznosUlozenUKapDP) IS NULL OR TRY_CONVERT(bigint, IznosUlozenUKapDP) <= 0)) OR
+            (Tip = 'OSN_KAP' AND (IznosUlozenUKapIF IS NULL OR TRY_CONVERT(bigint, IznosUlozenUKapIF) IS NULL OR TRY_CONVERT(bigint, IznosUlozenUKapIF) <= 0)) OR
+            (Tip = 'RES_SP' AND (IznosUlozenihSredstava IS NULL OR TRY_CONVERT(bigint, IznosUlozenihSredstava) IS NULL OR TRY_CONVERT(bigint, IznosUlozenihSredstava) <= 0)) OR
+            (Tip = 'RES_SP' AND (PovrsinaZaOslobadjanje IS NULL OR TRY_CONVERT(real, PovrsinaZaOslobadjanje) IS NULL OR TRY_CONVERT(real, PovrsinaZaOslobadjanje) <= 0));
+
+        IF @ErrorMsg IS NOT NULL
+            THROW 52041, @ErrorMsg, 1;
 
         ;WITH Src AS (
             SELECT
@@ -1050,32 +1750,48 @@ BEGIN
               AND NOT EXISTS (SELECT 1 FROM @UmanjMap m WHERE m.ID = su.ID);
         END
 
-        -- reset subtypes za stavke iz JSON-a
-        DELETE kg FROM ppdg3p.KapitalniGubitak kg WHERE EXISTS (SELECT 1 FROM @UmanjMap m WHERE m.ID = kg.IDStavkeUmanjenja);
-        DELETE ok FROM ppdg3p.UlaganjeUOsnKap ok WHERE EXISTS (SELECT 1 FROM @UmanjMap m WHERE m.ID = ok.IDStavkeUmanjenja);
-        DELETE rs FROM ppdg3p.UlaganjneUResavanjeSP rs WHERE EXISTS (SELECT 1 FROM @UmanjMap m WHERE m.ID = rs.IDStavkeUmanjenja);
+        -- Brisi subtipove samo za ovu prijavu gde postoji IDPrijave
+        DELETE kg
+        FROM ppdg3p.KapitalniGubitak kg
+        WHERE kg.IDPrijave = @IDPrijave
+          AND EXISTS (SELECT 1 FROM @UmanjMap m WHERE m.ID = kg.IDStavkeUmanjenja);
 
-        INSERT ppdg3p.KapitalniGubitak (IDStavkeUmanjenja, IznosKapGub, BrojResenja)
-        SELECT ID, IznosKapGub, BrojResenja
+        DELETE ok
+        FROM ppdg3p.UlaganjeUOsnKap ok
+        WHERE EXISTS (SELECT 1 FROM @UmanjMap m WHERE m.ID = ok.IDStavkeUmanjenja);
+
+        DELETE rs
+        FROM ppdg3p.UlaganjneUResavanjeSP rs
+        WHERE rs.IDPrijave = @IDPrijave
+          AND EXISTS (SELECT 1 FROM @UmanjMap m WHERE m.ID = rs.IDStavkeUmanjenja);
+
+        -- INSERT KapitalniGubitak: OBAVEZNO IDPrijave
+        INSERT ppdg3p.KapitalniGubitak (IDStavkeUmanjenja, BrojResenja, IznosKapGub, IDPrijave)
+        SELECT ID, BrojResenja, IznosKapGub, @IDPrijave
         FROM @UmanjMap
         WHERE Tip = 'KAP_GUB';
 
+        -- INSERT UlaganjeUOsnKap: nema IDPrijave u tabeli
         INSERT ppdg3p.UlaganjeUOsnKap (IDStavkeUmanjenja, IznosUlozenUKapDP, IznosUlozenUKapIF)
         SELECT ID, IznosUlozenUKapDP, IznosUlozenUKapIF
         FROM @UmanjMap
         WHERE Tip = 'OSN_KAP';
 
-        INSERT ppdg3p.UlaganjneUResavanjeSP (IDStavkeUmanjenja, IznosUlozenihSredstava, PovrsinaZaOslobadjanje, Domacinstvo)
-        SELECT ID, IznosUlozenihSredstava, PovrsinaZaOslobadjanje, Domacinstvo
+        -- INSERT ResavanjeSP: OBAVEZNO IDPrijave
+        INSERT ppdg3p.UlaganjneUResavanjeSP (IDStavkeUmanjenja, IDPrijave, IznosUlozenihSredstava, PovrsinaZaOslobadjanje, Domacinstvo)
+        SELECT ID, @IDPrijave, IznosUlozenihSredstava, PovrsinaZaOslobadjanje, Domacinstvo
         FROM @UmanjMap
         WHERE Tip = 'RES_SP';
 
         /* ------------------------------------------------------------
-           6) REKALKULACIJA SUMA (UkProdajnaCena/UkNabavnaCena/UkUmanjenja/KapitalnaOsnovica)
+           6) REKALKULACIJA SUMA
         ------------------------------------------------------------ */
         EXEC ppdg3p.PPDG3P_OsnovicaCalc @IDPrijave = @IDPrijave;
 
         COMMIT;
+
+        -- Return the ID (useful for CREATE mode)
+        SELECT @IDPrijave AS IDPrijave;
     END TRY
     BEGIN CATCH
         EXEC sys.sp_set_session_context @key = N'ppdg3p_allow_dokazi_jmbg_update', @value = NULL;

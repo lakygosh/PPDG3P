@@ -52,11 +52,13 @@ public class SqlService : ISqlService
         var columns = string.Join(", ", values.Keys.Select(k => $"[{k}]"));
         var paramNames = string.Join(", ", values.Keys.Select((k, i) => $"@p{i}"));
 
-        // Use OUTPUT clause to return inserted row including identity values
+        // Use OUTPUT INTO to avoid trigger conflicts
         var sql = $@"
             INSERT INTO [{_schema}].[{tableName}] ({columns})
-            OUTPUT INSERTED.*
-            VALUES ({paramNames})";
+            VALUES ({paramNames});
+
+            SELECT * FROM [{_schema}].[{tableName}]
+            WHERE ID = SCOPE_IDENTITY();";
 
         using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync();

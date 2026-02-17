@@ -54,16 +54,6 @@ public class KdtController : ControllerBase
             {
                 new() { TableName = "PrenosHartijaOdVrednosti", ForeignKeyColumn = "IDStavkePrenosa", TypeDiscriminator = "HARTIJE" }
             }
-        },
-        new KdtHierarchy
-        {
-            Name = "PoreskiObveznik",
-            ParentTable = "PoreskiObveznik",
-            ParentKeyColumn = "JMBG/ESB/PIB_lice",
-            ChildTables = new List<KdtChildTable>
-            {
-                new() { TableName = "PoreskiObveznik_Details", ForeignKeyColumn = "JMBG/ESB/PIB", TypeDiscriminator = "DETAILS" }
-            }
         }
     };
 
@@ -235,8 +225,8 @@ public class KdtController : ControllerBase
 
                 var parentSql = $@"
                     INSERT INTO [{Schema}].[{hierarchy.ParentTable}] ({parentColumns})
-                    OUTPUT INSERTED.[{hierarchy.ParentKeyColumn}]
-                    VALUES ({parentParams})";
+                    VALUES ({parentParams});
+                    SELECT SCOPE_IDENTITY();";
 
                 using var cmd = new SqlCommand(parentSql, connection, transaction);
 

@@ -203,7 +203,6 @@ export function RecordForm({
         onChange={(e) => handleChange(col.columnName, e.target.value)}
         disabled={isDisabled}
         className="form-input"
-        maxLength={col.maxLength || undefined}
       />
     );
   };

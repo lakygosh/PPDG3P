@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { metadataApi, tableApi } from '../api/client';
-import { getTableDisplayName } from '../types';
-import type { TableMetadata } from '../types';
+import { tableApi } from '../api/client';
 import './Dashboard.css';
 
 interface TableStats {
@@ -11,16 +9,12 @@ interface TableStats {
 }
 
 export function Dashboard() {
-  const [tables, setTables] = useState<TableMetadata[]>([]);
   const [stats, setStats] = useState<TableStats[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const tablesData = await metadataApi.getTables();
-        setTables(tablesData);
-
         // Load row counts for main tables
         const mainTables = ['PPDG3P', 'PoreskiObveznik', 'StavkaPrenosa', 'StavkaUmanjenja', 'Dokazi'];
         const statsPromises = mainTables.map(async (name) => {
@@ -126,23 +120,6 @@ export function Dashboard() {
         </div>
       </div>
 
-      <div className="tables-overview">
-        <h2>Sve tabele ({tables.length})</h2>
-        <div className="tables-grid">
-          {tables.map((table) => (
-            <Link
-              key={table.tableName}
-              to={`/table/${table.tableName}`}
-              className="table-card"
-            >
-              <div className="table-name">{getTableDisplayName(table.tableName)}</div>
-              <div className="table-meta">
-                {table.columns.length} kolona • {table.primaryKeyColumns.length} PK
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

@@ -9,7 +9,7 @@ interface PoreskiObveznik {
   id: number;
   ime: string;
   prezime: string;
-  email?: string;
+  prebivalisteOstvPrih: string;
 }
 
 interface OrganPU {
@@ -27,17 +27,25 @@ interface OsnovZaPrijavu {
   naziv: string;
 }
 
+interface DokumentOSticanju {
+  datumSticanja: string;
+  brojDokOSticanju: string;
+  brojStecenihJedinica: string;
+  nabavnaCena: string;
+}
+
 interface StavkaPrenosa {
   redniBroj: number;
   datumPrenosa: string;
-  prodajnaCena: number;
+  prodajnaCena: string;
   datumSticanja: string;
-  nabavnaCena: number;
+  nabavnaCena: string;
   isDigital: boolean;
   // Za hartije od vrednosti
   naziv?: string;
-  brDokOPrenosu?: number;
-  dokumentiOSticanju?: { brojStecenihJedinica: number }[];
+  brDokOPrenosu?: string;
+  brojPrenetihHOV?: string;
+  dokumentiOSticanju?: DokumentOSticanju[];
 }
 
 interface StavkaUmanjenja {
@@ -45,15 +53,15 @@ interface StavkaUmanjenja {
   tip: 'RES_SP' | 'OSN_KAP' | 'KAP_GUB';
   datumUlaganja: string;
   // RES_SP
-  iznosUlozenihSredstava?: number;
-  povrsinaZaOslobadjanje?: number;
+  iznosUlozenihSredstava?: string;
+  povrsinaZaOslobadjanje?: string;
   domacinstvo?: boolean;
   // OSN_KAP
-  iznosUlozenUKapDP?: number;
-  iznosUlozenUKapIF?: number;
+  iznosUlozenUKapDP?: string;
+  iznosUlozenUKapIF?: string;
   // KAP_GUB
-  iznosKapGub?: number;
-  brojResenja?: number;
+  iznosKapGub?: string;
+  brojResenja?: string;
 }
 
 interface Dokaz {
@@ -94,30 +102,45 @@ interface FormData {
 const emptyStavkaPrenosa = (): StavkaPrenosa => ({
   redniBroj: 0,
   datumPrenosa: '',
-  prodajnaCena: 0,
+  prodajnaCena: '',
   datumSticanja: '',
-  nabavnaCena: 0,
+  nabavnaCena: '',
   isDigital: true,
 });
 
+const getTodayDate = () => new Date().toISOString().split('T')[0];
+
 const emptyStavkaHartije = (): StavkaPrenosa => ({
   redniBroj: 0,
-  datumPrenosa: '',
-  prodajnaCena: 0,
-  datumSticanja: '',
-  nabavnaCena: 0,
+  datumPrenosa: getTodayDate(),
+  prodajnaCena: '100000',
+  datumSticanja: getTodayDate(),
+  nabavnaCena: '80000',
   isDigital: false,
-  naziv: '',
-  brDokOPrenosu: 0,
-  dokumentiOSticanju: [],
+  naziv: 'NIS а.д. Нови Сад',
+  brDokOPrenosu: '1',
+  brojPrenetihHOV: '100',
+  dokumentiOSticanju: [{
+    datumSticanja: getTodayDate(),
+    brojDokOSticanju: '1',
+    brojStecenihJedinica: '100',
+    nabavnaCena: '80000',
+  }],
+});
+
+const emptyDokumentOSticanju = (): DokumentOSticanju => ({
+  datumSticanja: getTodayDate(),
+  brojDokOSticanju: '1',
+  brojStecenihJedinica: '50',
+  nabavnaCena: '40000',
 });
 
 const emptyUmanjenjeRESP = (): StavkaUmanjenja => ({
   redniBroj: 0,
   tip: 'RES_SP',
   datumUlaganja: '',
-  iznosUlozenihSredstava: 0,
-  povrsinaZaOslobadjanje: 0,
+  iznosUlozenihSredstava: '',
+  povrsinaZaOslobadjanje: '',
   domacinstvo: false,
 });
 
@@ -125,16 +148,16 @@ const emptyUmanjenjeOSNKAP = (): StavkaUmanjenja => ({
   redniBroj: 0,
   tip: 'OSN_KAP',
   datumUlaganja: '',
-  iznosUlozenUKapDP: 0,
-  iznosUlozenUKapIF: 0,
+  iznosUlozenUKapDP: '',
+  iznosUlozenUKapIF: '',
 });
 
 const emptyUmanjenjeKAPGUB = (): StavkaUmanjenja => ({
   redniBroj: 0,
   tip: 'KAP_GUB',
   datumUlaganja: '',
-  iznosKapGub: 0,
-  brojResenja: 0,
+  iznosKapGub: '',
+  brojResenja: '',
 });
 
 const emptyDokaz = (): Dokaz => ({
@@ -160,23 +183,23 @@ export function DocumentFormPage() {
 
   // Form data
   const [formData, setFormData] = useState<FormData>({
-    vrstaPrijave: 0,
-    osnovZaPrijavu: 0,
+    vrstaPrijave: 1,
+    osnovZaPrijavu: 1,
     datumOstvarivanjaPrihoda: '',
     datumDospelosti: '',
     datumPodnosenja: '',
     izmena: false,
     organPU: 0,
     tipObveznika: 'fizicko',
-    jmbgObveznika: '',
-    imeObveznika: '',
-    prezimeObveznika: '',
-    prebivaliste: '',
-    adresaObveznika: '',
-    telefon: '',
-    email: '',
+    jmbgObveznika: '1234567890123',
+    imeObveznika: 'Тест',
+    prezimeObveznika: 'Тестовић',
+    prebivaliste: 'Београд',
+    adresaObveznika: 'Тест улица 123',
+    telefon: '0601234567',
+    email: 'test@example.com',
     jmbgPodnosioca: '',
-    zemljaRezidentstva: 'Srbija',
+    zemljaRezidentstva: 'Србија',
     jmbgPunomocnika: '',
     stavkePrenosa: [],
     stavkeUmanjenja: [],
@@ -185,12 +208,23 @@ export function DocumentFormPage() {
 
   // Load lookup data
   useEffect(() => {
+    // VrstaPrijave and OsnovZaPrijavu are no longer DB tables - hardcoded inline
+    setVrstePrijave([
+      { id: 1, naziv: 'Konačna prijava' },
+      { id: 2, naziv: 'Izmenjena prijava' },
+    ]);
+    setOsnoviZaPrijavu([
+      { id: 1, naziv: 'Prodaja nepokretnosti' },
+      { id: 2, naziv: 'Prodaja hartija od vrednosti (HoV)' },
+      { id: 3, naziv: 'Udeo u pravnom licu' },
+      { id: 4, naziv: 'Autorska prava' },
+      { id: 5, naziv: 'Nasleđe/Poklon' },
+    ]);
+
     const loadLookups = async () => {
       try {
-        const [orgResult, vrsteResult, osnoviResult, obvResult] = await Promise.all([
+        const [orgResult, obvResult] = await Promise.all([
           tableApi.getAll('OrgPU'),
-          tableApi.getAll('VrstaPrijave'),
-          tableApi.getAll('OsnovZaPrijavu'),
           tableApi.getAll('PoreskiObveznik'),
         ]);
 
@@ -199,21 +233,11 @@ export function DocumentFormPage() {
           naziv: (r.Naziv as string).trim(),
         })));
 
-        setVrstePrijave(vrsteResult.rows.map((r: Record<string, unknown>) => ({
-          id: r.ID as number,
-          naziv: (r.Naziv as string).trim(),
-        })));
-
-        setOsnoviZaPrijavu(osnoviResult.rows.map((r: Record<string, unknown>) => ({
-          id: r.ID as number,
-          naziv: (r.Naziv as string).trim(),
-        })));
-
         setPoreskiObveznici(obvResult.rows.map((r: Record<string, unknown>) => ({
           id: r['JMBG/ESB/PIB_lice'] as number,
           ime: (r.Ime as string).trim(),
           prezime: (r.Prezime as string).trim(),
-          email: r.Email ? (r.Email as string).trim() : undefined,
+          prebivalisteOstvPrih: (r.PrebivalisteOstvPrih as string).trim(),
         })));
       } catch (err) {
         setError(handleApiError(err));
@@ -247,6 +271,10 @@ export function DocumentFormPage() {
             imeObveznika: ((doc.poreskiObveznik as Record<string, unknown>)?.ime as string) || '',
             prezimeObveznika: ((doc.poreskiObveznik as Record<string, unknown>)?.prezime as string) || '',
             email: ((doc.poreskiObveznik as Record<string, unknown>)?.email as string) || '',
+            prebivaliste: ((doc.poreskiObveznik as Record<string, unknown>)?.prebivalisteOstvPrih as string) || '',
+            adresaObveznika: ((doc.poreskiObveznik as Record<string, unknown>)?.adresa as string) || '',
+            telefon: ((doc.poreskiObveznik as Record<string, unknown>)?.telefon as string) || '',
+            zemljaRezidentstva: ((doc.poreskiObveznik as Record<string, unknown>)?.drzava as string) || '',
             // Map arrays
             stavkePrenosa: mapPrenosi(doc.Prenosi as unknown[]),
             stavkeUmanjenja: mapUmanjenja(doc.Umanjenja as unknown[]),
@@ -269,33 +297,16 @@ export function DocumentFormPage() {
     setError(null);
 
     try {
+      const jsonDoc = buildJsonDocument();
+      console.log('Sending to backend:', JSON.stringify(jsonDoc, null, 2));
+      console.log('stavkePrenosa before build:', formData.stavkePrenosa);
+
       if (isEdit && id) {
-        // Update existing document
-        const jsonDoc = buildJsonDocument();
         await documentApi.update(parseInt(id), jsonDoc);
-        navigate('/documents');
       } else {
-        // Create new document - first create PPDG3P record
-        const createData = {
-          datumOstvarivanjaPrihoda: formData.datumOstvarivanjaPrihoda,
-          datumDospelostiZaPodnosenjePrijave: formData.datumDospelosti,
-          datumNacinPodnosenjaPrijave: formData.datumPodnosenja,
-          izmena: formData.izmena,
-          idOrganaPoreske: formData.organPU,
-          idPoreskogObveznika: parseInt(formData.jmbgObveznika),
-          idVrstePrijave: formData.vrstaPrijave,
-          idOsnovaZaPrijavu: formData.osnovZaPrijavu,
-          email: formData.email || undefined,
-        };
-
-        const result = await documentApi.create(createData);
-        const newId = result.id;
-
-        // Then update with full document
-        const jsonDoc = buildJsonDocument();
-        await documentApi.update(newId, jsonDoc);
-        navigate('/documents');
+        await documentApi.create(jsonDoc);
       }
+      navigate('/documents');
     } catch (err) {
       setError(handleApiError(err));
     } finally {
@@ -305,33 +316,43 @@ export function DocumentFormPage() {
 
   const buildJsonDocument = () => {
     return {
-      datumOstvarivanjaPrihoda: formData.datumOstvarivanjaPrihoda,
-      datumDospelostiZaPodnosenjePrijave: formData.datumDospelosti,
-      datumNacinPodnosenjaPrijave: formData.datumPodnosenja,
+      datumOstvarivanjaPrihoda: formData.datumOstvarivanjaPrihoda || null,
+      datumDospelostiZaPodnosenjePrijave: formData.datumDospelosti || null,
+      datumNacinPodnosenjaPrijave: formData.datumPodnosenja || null,
       izmena: formData.izmena,
-      organPU: { id: formData.organPU },
-      vrstaPrijave: { id: formData.vrstaPrijave },
-      osnovZaPrijavu: { id: formData.osnovZaPrijavu },
+      organPU: formData.organPU ? { id: formData.organPU } : null,
+      vrstaPrijave: formData.vrstaPrijave ? { id: formData.vrstaPrijave } : null,
+      osnovZaPrijavu: formData.osnovZaPrijavu ? { id: formData.osnovZaPrijavu } : null,
       poreskiObveznik: {
-        id: parseInt(formData.jmbgObveznika),
-        ime: formData.imeObveznika,
-        prezime: formData.prezimeObveznika,
-        email: formData.email,
+        id: formData.jmbgObveznika || null,
+        ime: formData.imeObveznika || null,
+        prezime: formData.prezimeObveznika || null,
+        prebivalisteOstvPrih: formData.prebivaliste || null,
+        email: formData.email || null,
+        telefon: formData.telefon || null,
+        adresa: formData.adresaObveznika || null,
+        drzava: formData.zemljaRezidentstva || null,
       },
       Prenosi: formData.stavkePrenosa.map((s, idx) => ({
         ID: s.redniBroj || undefined,
-        DatumPrenosa: s.datumPrenosa,
-        ProdajnaCena: s.prodajnaCena,
-        DatumSticanja: s.datumSticanja,
-        NabavnaCena: s.nabavnaCena,
+        DatumPrenosa: s.datumPrenosa || null,
+        ProdajnaCena: s.prodajnaCena || null,
+        DatumSticanja: s.datumSticanja || null,
+        NabavnaCena: s.nabavnaCena || null,
         IsDigital: s.isDigital,
         Naziv: s.naziv,
         BrDokOPrenosu: s.brDokOPrenosu,
-        DokumentiOSticanju: s.dokumentiOSticanju,
+        BrojPrenetihHOV: s.brojPrenetihHOV,
+        DokumentiOSticanju: s.dokumentiOSticanju?.map(d => ({
+          DatumSticanja: d.datumSticanja || null,
+          BrojDokOSticanju: d.brojDokOSticanju,
+          BrojStecenihJedinica: d.brojStecenihJedinica,
+          NabavnaCena: d.nabavnaCena,
+        })),
       })),
       Umanjenja: formData.stavkeUmanjenja.map((s) => ({
         ID: s.redniBroj || undefined,
-        DatumUlaganja: s.datumUlaganja,
+        DatumUlaganja: s.datumUlaganja || null,
         Tip: s.tip,
         IznosKapGub: s.iznosKapGub,
         BrojResenja: s.brojResenja,
@@ -371,6 +392,44 @@ export function DocumentFormPage() {
       ...prev,
       stavkePrenosa: prev.stavkePrenosa.map((item, i) =>
         i === index ? { ...item, [field]: value } : item
+      ),
+    }));
+  };
+
+  const addDokumentOSticanju = (prenosIndex: number) => {
+    setFormData(prev => ({
+      ...prev,
+      stavkePrenosa: prev.stavkePrenosa.map((item, i) =>
+        i === prenosIndex
+          ? { ...item, dokumentiOSticanju: [...(item.dokumentiOSticanju || []), emptyDokumentOSticanju()] }
+          : item
+      ),
+    }));
+  };
+
+  const removeDokumentOSticanju = (prenosIndex: number, docIndex: number) => {
+    setFormData(prev => ({
+      ...prev,
+      stavkePrenosa: prev.stavkePrenosa.map((item, i) =>
+        i === prenosIndex
+          ? { ...item, dokumentiOSticanju: (item.dokumentiOSticanju || []).filter((_, j) => j !== docIndex) }
+          : item
+      ),
+    }));
+  };
+
+  const updateDokumentOSticanju = (prenosIndex: number, docIndex: number, field: keyof DokumentOSticanju, value: unknown) => {
+    setFormData(prev => ({
+      ...prev,
+      stavkePrenosa: prev.stavkePrenosa.map((item, i) =>
+        i === prenosIndex
+          ? {
+              ...item,
+              dokumentiOSticanju: (item.dokumentiOSticanju || []).map((doc, j) =>
+                j === docIndex ? { ...doc, [field]: value } : doc
+              ),
+            }
+          : item
       ),
     }));
   };
@@ -438,7 +497,7 @@ export function DocumentFormPage() {
         ...prev,
         imeObveznika: obveznik.ime,
         prezimeObveznika: obveznik.prezime,
-        email: obveznik.email || '',
+        prebivaliste: obveznik.prebivalisteOstvPrih,
       }));
     }
   };
@@ -456,8 +515,6 @@ export function DocumentFormPage() {
         <p className="page-subtitle">Poreska prijava za utvrđivanje poreza na kapitalne dobitke</p>
       </div>
 
-      <ErrorPanel error={error} onClose={() => setError(null)} />
-
       <form onSubmit={handleSubmit} className="document-form">
         {/* DEO 1 */}
         <section className="form-section">
@@ -468,7 +525,6 @@ export function DocumentFormPage() {
               <select
                 value={formData.vrstaPrijave}
                 onChange={(e) => setFormData(prev => ({ ...prev, vrstaPrijave: parseInt(e.target.value) }))}
-                required
               >
                 <option value={0}>-- Изаберите --</option>
                 {vrstePrijave.map(v => (
@@ -481,7 +537,6 @@ export function DocumentFormPage() {
               <select
                 value={formData.osnovZaPrijavu}
                 onChange={(e) => setFormData(prev => ({ ...prev, osnovZaPrijavu: parseInt(e.target.value) }))}
-                required
               >
                 <option value={0}>-- Изаберите --</option>
                 {osnoviZaPrijavu.map(o => (
@@ -497,7 +552,6 @@ export function DocumentFormPage() {
                 type="date"
                 value={formData.datumOstvarivanjaPrihoda}
                 onChange={(e) => setFormData(prev => ({ ...prev, datumOstvarivanjaPrihoda: e.target.value }))}
-                required
               />
             </div>
             <div className="form-group">
@@ -506,7 +560,6 @@ export function DocumentFormPage() {
                 type="date"
                 value={formData.datumDospelosti}
                 onChange={(e) => setFormData(prev => ({ ...prev, datumDospelosti: e.target.value }))}
-                required
               />
             </div>
             <div className="form-group">
@@ -515,7 +568,6 @@ export function DocumentFormPage() {
                 type="date"
                 value={formData.datumPodnosenja}
                 onChange={(e) => setFormData(prev => ({ ...prev, datumPodnosenja: e.target.value }))}
-                required
               />
             </div>
           </div>
@@ -535,7 +587,6 @@ export function DocumentFormPage() {
               <select
                 value={formData.organPU}
                 onChange={(e) => setFormData(prev => ({ ...prev, organPU: parseInt(e.target.value) }))}
-                required
               >
                 <option value={0}>-- Изаберите --</option>
                 {organiPU.map(o => (
@@ -562,18 +613,11 @@ export function DocumentFormPage() {
             </div>
             <div className="form-group">
               <label>2.2 ЈМБГ/ЕСБ/ПИБ *</label>
-              <select
+              <input
+                type="text"
                 value={formData.jmbgObveznika}
-                onChange={(e) => handleObveznikChange(e.target.value)}
-                required
-              >
-                <option value="">-- Изаберите обвезника --</option>
-                {poreskiObveznici.map(o => (
-                  <option key={o.id} value={o.id}>
-                    {o.id} - {o.ime} {o.prezime}
-                  </option>
-                ))}
-              </select>
+                onChange={(e) => setFormData(prev => ({ ...prev, jmbgObveznika: e.target.value }))}
+              />
             </div>
           </div>
           <div className="form-row">
@@ -583,7 +627,6 @@ export function DocumentFormPage() {
                 type="text"
                 value={formData.imeObveznika}
                 onChange={(e) => setFormData(prev => ({ ...prev, imeObveznika: e.target.value }))}
-                required
               />
             </div>
             <div className="form-group">
@@ -592,7 +635,6 @@ export function DocumentFormPage() {
                 type="text"
                 value={formData.prezimeObveznika}
                 onChange={(e) => setFormData(prev => ({ ...prev, prezimeObveznika: e.target.value }))}
-                required
               />
             </div>
           </div>
@@ -626,7 +668,7 @@ export function DocumentFormPage() {
             <div className="form-group">
               <label>2.7 Електронска адреса</label>
               <input
-                type="email"
+                type="text"
                 value={formData.email}
                 onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
               />
@@ -682,9 +724,9 @@ export function DocumentFormPage() {
                       </td>
                       <td>
                         <input
-                          type="number"
+                          type="text"
                           value={stavka.prodajnaCena}
-                          onChange={(e) => updateStavkaPrenosa(realIndex, 'prodajnaCena', parseInt(e.target.value) || 0)}
+                          onChange={(e) => updateStavkaPrenosa(realIndex, 'prodajnaCena', e.target.value)}
                         />
                       </td>
                       <td>
@@ -696,9 +738,9 @@ export function DocumentFormPage() {
                       </td>
                       <td>
                         <input
-                          type="number"
+                          type="text"
                           value={stavka.nabavnaCena}
-                          onChange={(e) => updateStavkaPrenosa(realIndex, 'nabavnaCena', parseInt(e.target.value) || 0)}
+                          onChange={(e) => updateStavkaPrenosa(realIndex, 'nabavnaCena', e.target.value)}
                         />
                       </td>
                       <td>
@@ -718,76 +760,118 @@ export function DocumentFormPage() {
         {/* DEO 4 */}
         <section className="form-section">
           <h2 className="section-title">Део 4. Подаци код преноса хартија од вредности</h2>
-          <div className="items-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Р.бр.</th>
-                  <th>Назив емитента</th>
-                  <th>Датум преноса</th>
-                  <th>Бр. док. о преносу</th>
-                  <th>Продајна цена</th>
-                  <th>Датум стицања</th>
-                  <th>Набавна цена</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {formData.stavkePrenosa.filter(s => !s.isDigital).map((stavka, index) => {
-                  const realIndex = formData.stavkePrenosa.findIndex(s => s === stavka);
-                  return (
-                    <tr key={index}>
-                      <td>{index + 1}</td>
-                      <td>
+          <div className="items-table hov-table">
+            {formData.stavkePrenosa.filter(s => !s.isDigital).map((stavka, index) => {
+              const realIndex = formData.stavkePrenosa.findIndex(s => s === stavka);
+              return (
+                <div key={index} className="hov-item">
+                  <div className="hov-header">
+                    <span className="hov-number">4.{index + 1}</span>
+                    <button type="button" className="btn-remove" onClick={() => removeStavkaPrenosa(realIndex)}>✕</button>
+                  </div>
+                  <div className="hov-main-fields">
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label>4.2 Назив емитента</label>
                         <input
                           type="text"
                           value={stavka.naziv || ''}
                           onChange={(e) => updateStavkaPrenosa(realIndex, 'naziv', e.target.value)}
                         />
-                      </td>
-                      <td>
+                      </div>
+                      <div className="form-group">
+                        <label>4.3 Датум преноса</label>
                         <input
                           type="date"
                           value={stavka.datumPrenosa}
                           onChange={(e) => updateStavkaPrenosa(realIndex, 'datumPrenosa', e.target.value)}
                         />
-                      </td>
-                      <td>
+                      </div>
+                      <div className="form-group">
+                        <label>4.4 Бр. док. о преносу</label>
                         <input
-                          type="number"
-                          value={stavka.brDokOPrenosu || 0}
-                          onChange={(e) => updateStavkaPrenosa(realIndex, 'brDokOPrenosu', parseInt(e.target.value) || 0)}
+                          type="text"
+                          value={stavka.brDokOPrenosu || ''}
+                          onChange={(e) => updateStavkaPrenosa(realIndex, 'brDokOPrenosu', e.target.value)}
                         />
-                      </td>
-                      <td>
+                      </div>
+                    </div>
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label>4.5 Број пренетих ХоВ</label>
                         <input
-                          type="number"
+                          type="text"
+                          value={stavka.brojPrenetihHOV || ''}
+                          onChange={(e) => updateStavkaPrenosa(realIndex, 'brojPrenetihHOV', e.target.value)}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>4.6 Продајна цена</label>
+                        <input
+                          type="text"
                           value={stavka.prodajnaCena}
-                          onChange={(e) => updateStavkaPrenosa(realIndex, 'prodajnaCena', parseInt(e.target.value) || 0)}
+                          onChange={(e) => updateStavkaPrenosa(realIndex, 'prodajnaCena', e.target.value)}
                         />
-                      </td>
-                      <td>
-                        <input
-                          type="date"
-                          value={stavka.datumSticanja}
-                          onChange={(e) => updateStavkaPrenosa(realIndex, 'datumSticanja', e.target.value)}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type="number"
-                          value={stavka.nabavnaCena}
-                          onChange={(e) => updateStavkaPrenosa(realIndex, 'nabavnaCena', parseInt(e.target.value) || 0)}
-                        />
-                      </td>
-                      <td>
-                        <button type="button" className="btn-remove" onClick={() => removeStavkaPrenosa(realIndex)}>✕</button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="hov-documents">
+                    <h4>Документи о стицању</h4>
+                    <table className="nested-table">
+                      <thead>
+                        <tr>
+                          <th>4.7 Датум стицања</th>
+                          <th>4.8 Бр. док. о стицању</th>
+                          <th>4.9 Број стечених ХоВ</th>
+                          <th>4.10 Набавна цена</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(stavka.dokumentiOSticanju || []).map((doc, docIndex) => (
+                          <tr key={docIndex}>
+                            <td>
+                              <input
+                                type="date"
+                                value={doc.datumSticanja}
+                                onChange={(e) => updateDokumentOSticanju(realIndex, docIndex, 'datumSticanja', e.target.value)}
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="text"
+                                value={doc.brojDokOSticanju}
+                                onChange={(e) => updateDokumentOSticanju(realIndex, docIndex, 'brojDokOSticanju', e.target.value)}
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="text"
+                                value={doc.brojStecenihJedinica}
+                                onChange={(e) => updateDokumentOSticanju(realIndex, docIndex, 'brojStecenihJedinica', e.target.value)}
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="text"
+                                value={doc.nabavnaCena}
+                                onChange={(e) => updateDokumentOSticanju(realIndex, docIndex, 'nabavnaCena', e.target.value)}
+                              />
+                            </td>
+                            <td>
+                              <button type="button" className="btn-remove-small" onClick={() => removeDokumentOSticanju(realIndex, docIndex)}>✕</button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    <button type="button" className="btn-add-small" onClick={() => addDokumentOSticanju(realIndex)}>
+                      + Додај документ о стицању
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
             <button type="button" className="btn-add" onClick={() => addStavkaPrenosa(false)}>
               + Додај хартију од вредности
             </button>
@@ -824,17 +908,16 @@ export function DocumentFormPage() {
                       </td>
                       <td>
                         <input
-                          type="number"
-                          step="0.01"
-                          value={stavka.povrsinaZaOslobadjanje || 0}
-                          onChange={(e) => updateStavkaUmanjenja(realIndex, 'povrsinaZaOslobadjanje', parseFloat(e.target.value) || 0)}
+                          type="text"
+                          value={stavka.povrsinaZaOslobadjanje || ''}
+                          onChange={(e) => updateStavkaUmanjenja(realIndex, 'povrsinaZaOslobadjanje', e.target.value)}
                         />
                       </td>
                       <td>
                         <input
-                          type="number"
-                          value={stavka.iznosUlozenihSredstava || 0}
-                          onChange={(e) => updateStavkaUmanjenja(realIndex, 'iznosUlozenihSredstava', parseInt(e.target.value) || 0)}
+                          type="text"
+                          value={stavka.iznosUlozenihSredstava || ''}
+                          onChange={(e) => updateStavkaUmanjenja(realIndex, 'iznosUlozenihSredstava', e.target.value)}
                         />
                       </td>
                       <td>
@@ -889,16 +972,16 @@ export function DocumentFormPage() {
                       </td>
                       <td>
                         <input
-                          type="number"
-                          value={stavka.iznosUlozenUKapDP || 0}
-                          onChange={(e) => updateStavkaUmanjenja(realIndex, 'iznosUlozenUKapDP', parseInt(e.target.value) || 0)}
+                          type="text"
+                          value={stavka.iznosUlozenUKapDP || ''}
+                          onChange={(e) => updateStavkaUmanjenja(realIndex, 'iznosUlozenUKapDP', e.target.value)}
                         />
                       </td>
                       <td>
                         <input
-                          type="number"
-                          value={stavka.iznosUlozenUKapIF || 0}
-                          onChange={(e) => updateStavkaUmanjenja(realIndex, 'iznosUlozenUKapIF', parseInt(e.target.value) || 0)}
+                          type="text"
+                          value={stavka.iznosUlozenUKapIF || ''}
+                          onChange={(e) => updateStavkaUmanjenja(realIndex, 'iznosUlozenUKapIF', e.target.value)}
                         />
                       </td>
                       <td>
@@ -944,16 +1027,16 @@ export function DocumentFormPage() {
                       </td>
                       <td>
                         <input
-                          type="number"
-                          value={stavka.brojResenja || 0}
-                          onChange={(e) => updateStavkaUmanjenja(realIndex, 'brojResenja', parseInt(e.target.value) || 0)}
+                          type="text"
+                          value={stavka.brojResenja || ''}
+                          onChange={(e) => updateStavkaUmanjenja(realIndex, 'brojResenja', e.target.value)}
                         />
                       </td>
                       <td>
                         <input
-                          type="number"
-                          value={stavka.iznosKapGub || 0}
-                          onChange={(e) => updateStavkaUmanjenja(realIndex, 'iznosKapGub', parseInt(e.target.value) || 0)}
+                          type="text"
+                          value={stavka.iznosKapGub || ''}
+                          onChange={(e) => updateStavkaUmanjenja(realIndex, 'iznosKapGub', e.target.value)}
                         />
                       </td>
                       <td>
@@ -1016,12 +1099,17 @@ export function DocumentFormPage() {
 
         {/* Submit buttons */}
         <div className="form-actions">
-          <button type="button" className="btn btn-secondary" onClick={() => navigate(-1)} disabled={submitting}>
-            Откажи
-          </button>
-          <button type="submit" className="btn btn-primary" disabled={submitting}>
-            {submitting ? 'Чување...' : isEdit ? 'Сачувај измене' : 'Креирај пријаву'}
-          </button>
+          <div className="form-actions-error">
+            <ErrorPanel error={error} onClose={() => setError(null)} />
+          </div>
+          <div className="form-actions-buttons">
+            <button type="button" className="btn btn-secondary" onClick={() => navigate(-1)} disabled={submitting}>
+              Откажи
+            </button>
+            <button type="submit" className="btn btn-primary" disabled={submitting}>
+              {submitting ? 'Чување...' : isEdit ? 'Сачувај измене' : 'Креирај пријаву'}
+            </button>
+          </div>
         </div>
       </form>
     </div>
@@ -1043,16 +1131,23 @@ function mapPrenosi(prenosi: unknown[] | undefined): StavkaPrenosa[] {
   if (!prenosi) return [];
   return prenosi.map((p: unknown, idx: number) => {
     const prenos = p as Record<string, unknown>;
+    const dokumenti = prenos.DokumentiOSticanju as Record<string, unknown>[] | undefined;
     return {
       redniBroj: prenos.ID as number || idx + 1,
       datumPrenosa: formatDateForInput(prenos.DatumPrenosa as string),
-      prodajnaCena: prenos.ProdajnaCena as number || 0,
+      prodajnaCena: String(prenos.ProdajnaCena || ''),
       datumSticanja: formatDateForInput(prenos.DatumSticanja as string),
-      nabavnaCena: prenos.NabavnaCena as number || 0,
+      nabavnaCena: String(prenos.NabavnaCena || ''),
       isDigital: prenos.IsDigital as boolean || false,
       naziv: prenos.Naziv as string,
-      brDokOPrenosu: prenos.BrDokOPrenosu as number,
-      dokumentiOSticanju: prenos.DokumentiOSticanju as { brojStecenihJedinica: number }[],
+      brDokOPrenosu: String(prenos.BrDokOPrenosu ?? ''),
+      brojPrenetihHOV: String(prenos.BrojPrenetihHOV ?? ''),
+      dokumentiOSticanju: dokumenti?.map(d => ({
+        datumSticanja: formatDateForInput(d.DatumSticanja as string),
+        brojDokOSticanju: String(d.BrojDokOSticanju ?? ''),
+        brojStecenihJedinica: String(d.BrojStecenihJedinica ?? ''),
+        nabavnaCena: String(d.NabavnaCena ?? ''),
+      })) || [],
     };
   });
 }
@@ -1065,12 +1160,12 @@ function mapUmanjenja(umanjenja: unknown[] | undefined): StavkaUmanjenja[] {
       redniBroj: umanjenje.ID as number || idx + 1,
       tip: umanjenje.Tip as 'RES_SP' | 'OSN_KAP' | 'KAP_GUB',
       datumUlaganja: formatDateForInput(umanjenje.DatumUlaganja as string),
-      iznosKapGub: umanjenje.IznosKapGub as number,
-      brojResenja: umanjenje.BrojResenja as number,
-      iznosUlozenUKapDP: umanjenje.IznosUlozenUKapDP as number,
-      iznosUlozenUKapIF: umanjenje.IznosUlozenUKapIF as number,
-      iznosUlozenihSredstava: umanjenje.IznosUlozenihSredstava as number,
-      povrsinaZaOslobadjanje: umanjenje.PovrsinaZaOslobadjanje as number,
+      iznosKapGub: String(umanjenje.IznosKapGub ?? ''),
+      brojResenja: String(umanjenje.BrojResenja ?? ''),
+      iznosUlozenUKapDP: String(umanjenje.IznosUlozenUKapDP ?? ''),
+      iznosUlozenUKapIF: String(umanjenje.IznosUlozenUKapIF ?? ''),
+      iznosUlozenihSredstava: String(umanjenje.IznosUlozenihSredstava ?? ''),
+      povrsinaZaOslobadjanje: String(umanjenje.PovrsinaZaOslobadjanje ?? ''),
       domacinstvo: umanjenje.Domacinstvo as boolean,
     };
   });

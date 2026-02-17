@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { ApiError, SqlErrorResponse } from '../types';
 import './ErrorPanel.css';
 
@@ -11,45 +12,50 @@ function isSqlError(error: ApiError): error is SqlErrorResponse {
 }
 
 export function ErrorPanel({ error, onClose }: ErrorPanelProps) {
+  const [expanded, setExpanded] = useState(false);
+
   if (!error) return null;
 
+  const mainMessage = isSqlError(error)
+    ? error.errors[0]?.message || 'Greška baze podataka'
+    : error.detail;
+
+  const hasDetails = isSqlError(error) && (
+    error.errors.length > 1 ||
+    error.errors[0]?.procedure ||
+    error.errors[0]?.errorNumber
+  );
+
   return (
-    <div className="error-panel">
-      <div className="error-panel-header">
-        <h3>Greška baze podataka</h3>
-        {onClose && (
-          <button className="error-close-btn" onClick={onClose}>
-            ×
+    <div className="error-panel-compact">
+      <div className="error-icon">!</div>
+      <div className="error-content">
+        <span className="error-text">{mainMessage}</span>
+        {hasDetails && (
+          <button
+            className="error-expand-btn"
+            onClick={() => setExpanded(!expanded)}
+            title={expanded ? 'Sakrij detalje' : 'Prikaži detalje'}
+          >
+            {expanded ? '▲' : '▼'}
           </button>
         )}
       </div>
-      <div className="error-panel-content">
-        {isSqlError(error) ? (
-          <div className="sql-errors">
-            {error.errors.map((e, i) => (
-              <div key={i} className="sql-error-item">
-                <div className="error-number">
-                  <strong>Greška #{e.errorNumber}</strong>
-                  <span className="error-class">Klasa: {e.class}, Stanje: {e.state}</span>
-                </div>
-                <div className="error-message">{e.message}</div>
-                {e.procedure && (
-                  <div className="error-detail">
-                    <span>Procedura:</span> {e.procedure}
-                  </div>
-                )}
-                <div className="error-detail">
-                  <span>Linija:</span> {e.lineNumber}
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="general-error">
-            <p>{error.detail}</p>
-          </div>
-        )}
-      </div>
+      {onClose && (
+        <button className="error-close-btn" onClick={onClose} title="Zatvori">
+          ×
+        </button>
+      )}
+      {expanded && isSqlError(error) && (
+        <div className="error-details">
+          {error.errors.map((e, i) => (
+            <div key={i} className="error-detail-row">
+              <span className="detail-label">#{e.errorNumber}</span>
+              {e.procedure && <span className="detail-proc">{e.procedure}:{e.lineNumber}</span>}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,8 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { metadataApi } from '../api/client';
-import { getTableDisplayName } from '../types';
-import type { TableMetadata } from '../types';
 import './Layout.css';
 
 interface LayoutProps {
@@ -10,27 +7,8 @@ interface LayoutProps {
 }
 
 export function Layout({ children }: LayoutProps) {
-  const [tables, setTables] = useState<TableMetadata[]>([]);
-  const [views, setViews] = useState<TableMetadata[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const location = useLocation();
-
-  useEffect(() => {
-    const loadMetadata = async () => {
-      try {
-        const [tablesData, viewsData] = await Promise.all([
-          metadataApi.getTables(),
-          metadataApi.getViews(),
-        ]);
-        setTables(tablesData);
-        setViews(viewsData);
-      } catch (err) {
-        console.error('Failed to load metadata:', err);
-      }
-    };
-
-    loadMetadata();
-  }, []);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -70,40 +48,6 @@ export function Layout({ children }: LayoutProps) {
               ➕ Нова пријава
             </Link>
           </div>
-
-          <div className="nav-section">
-            <h2 className="nav-section-title">Табеле ({tables.length})</h2>
-            <div className="nav-links">
-              {tables.map((table) => (
-                <Link
-                  key={table.tableName}
-                  to={`/table/${table.tableName}`}
-                  className={`nav-link ${isActive(`/table/${table.tableName}`) ? 'active' : ''}`}
-                  title={table.tableName}
-                >
-                  📋 {getTableDisplayName(table.tableName)}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {views.length > 0 && (
-            <div className="nav-section">
-              <h2 className="nav-section-title">Pogledi ({views.length})</h2>
-              <div className="nav-links">
-                {views.map((view) => (
-                  <Link
-                    key={view.tableName}
-                    to={`/view/${view.tableName}`}
-                    className={`nav-link ${isActive(`/view/${view.tableName}`) ? 'active' : ''}`}
-                    title={view.tableName}
-                  >
-                    👁️ {getTableDisplayName(view.tableName)}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
 
           <div className="nav-section">
             <h2 className="nav-section-title">KDT Hijerarhije</h2>

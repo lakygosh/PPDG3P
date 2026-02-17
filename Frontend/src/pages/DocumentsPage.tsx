@@ -35,9 +35,9 @@ export function DocumentsPage() {
           datumPodnosenja: formatDate(doc?.datumNacinPodnosenjaPrijave as string),
           obveznik: obveznik ? `${obveznik.ime} ${obveznik.prezime}`.trim() : '-',
           jmbg: String(obveznik?.id || '-'),
-          ukProdajnaCena: 0, // These are calculated fields not in view
-          ukNabavnaCena: 0,
-          kapitalnaOsnovica: 0,
+          ukProdajnaCena: (doc?.ukProdajnaCena as number) || 0,
+          ukNabavnaCena: (doc?.ukNabavnaCena as number) || 0,
+          kapitalnaOsnovica: (doc?.kapitalnaOsnovica as number) || 0,
         };
       });
       setDocuments(mapped);
@@ -99,6 +99,9 @@ export function DocumentsPage() {
                 <th>Датум подношења</th>
                 <th>Порески обвезник</th>
                 <th>ЈМБГ/ЕСБ/ПИБ</th>
+                <th>Продајна цена</th>
+                <th>Набавна цена</th>
+                <th>Кап. основица</th>
                 <th>Акције</th>
               </tr>
             </thead>
@@ -109,6 +112,9 @@ export function DocumentsPage() {
                   <td>{doc.datumPodnosenja}</td>
                   <td>{doc.obveznik}</td>
                   <td className="jmbg-cell">{doc.jmbg}</td>
+                  <td className="number-cell">{doc.ukProdajnaCena.toLocaleString('sr-RS')}</td>
+                  <td className="number-cell">{doc.ukNabavnaCena.toLocaleString('sr-RS')}</td>
+                  <td className="number-cell">{doc.kapitalnaOsnovica.toLocaleString('sr-RS')}</td>
                   <td className="actions-cell">
                     <button
                       className="action-btn view-btn"

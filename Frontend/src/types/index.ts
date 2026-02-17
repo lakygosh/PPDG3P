@@ -101,15 +101,13 @@ export interface KdtRecord {
 // Serbian table name translations
 export const tableTranslations: Record<string, string> = {
   'PPDG3P': 'PPDG-3P Prijave',
+  'PPDG3P_Details': 'Detalji PPDG-3P prijave',
   'PoreskiObveznik': 'Poreski obveznici',
-  'PoreskiObveznik_Details': 'Detalji poreskog obveznika',
   'Lice': 'Lica',
   'Fizicko': 'Fizička lica',
   'Pravno': 'Pravna lica',
   'Broker': 'Brokeri',
   'OrgPU': 'Organizacione jedinice PU',
-  'VrstaPrijave': 'Vrste prijave',
-  'OsnovZaPrijavu': 'Osnovi za prijavu',
   'Punomocnik': 'Punomoćnici',
   'Dokazi': 'Dokazi',
   'StavkaPrenosa': 'Stavke prenosa',
@@ -165,11 +163,13 @@ export const columnTranslations: Record<string, string> = {
   'Domacinstvo': 'Domaćinstvo',
   'BrojStecenihJedinica': 'Broj stečenih jedinica',
   'BrDokOPrenosu': 'Broj dokumenata o prenosu',
-  'PrebOstvPrih': 'Prebivalište ostvarivanja prihoda',
-  'AdrObv': 'Adresa obveznika',
+  'PrebivalisteOstvPrih': 'Prebivalište ostvarivanja prihoda',
+  'Email_lice': 'E-pošta lica',
   'IDStavkePrenosa': 'ID stavke prenosa',
   'IDStavkeUmanjenja': 'ID stavke umanjenja',
-  'IDPrenHartVred': 'ID prenosa hartija od vrednosti'
+  'IDPrenHartVred': 'ID prenosa hartija od vrednosti',
+  'BrojPrenetihHOV': 'Broj prenetih HOV',
+  'BrojDokOSticanju': 'Broj dokumenta o sticanju'
 };
 
 export function getTableDisplayName(tableName: string): string {

@@ -1,8 +1,6 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using PPDG3P.Api.Models;
-
 namespace PPDG3P.Api.Controllers;
 
 /// <summary>
@@ -166,52 +164,22 @@ public class DocumentController : ControllerBase
     }
 
     /// <summary>
-    /// Create a new PPDG3P document (parent record only)
-    /// Returns the new ID for subsequent updates
+    /// Create a new PPDG3P document using the stored procedure.
+    /// Passing NULL for @IDPrijave triggers CREATE mode (auto-creates Lice/PoreskiObveznik if missing).
     /// </summary>
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateDocumentRequest request)
+    public async Task<IActionResult> Create([FromBody] JsonElement jsonDoc)
     {
         using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync();
 
-        var sql = $@"
-            INSERT INTO [{Schema}].[PPDG3P] (
-                DatumOstvarivanjaPrihoda,
-                DatumDospelostiZaPodnosenjePrijave,
-                DatumNacinPodnosenjaPrijave,
-                Izmena,
-                IDOrganaPoreske,
-                IDPoreskogObveznika,
-                IDVrstePrijave,
-                IDOsnovaZaPrijavu,
-                Email_lice
-            )
-            OUTPUT INSERTED.ID
-            VALUES (
-                @DatumOst,
-                @DatumDos,
-                @DatumPod,
-                @Izmena,
-                @IDOrgPU,
-                @IDPorObv,
-                @IDVrstePrij,
-                @IDOsnova,
-                @Email
-            )";
+        using var command = new SqlCommand($"[{Schema}].[UpsertPPDG3PDocumentFromJson]", connection);
+        command.CommandType = System.Data.CommandType.StoredProcedure;
+        command.Parameters.AddWithValue("@IDPrijave", DBNull.Value);
+        command.Parameters.AddWithValue("@JsonDoc", jsonDoc.GetRawText());
+        command.Parameters.AddWithValue("@Sync", true);
 
-        using var command = new SqlCommand(sql, connection);
-        command.Parameters.AddWithValue("@DatumOst", request.DatumOstvarivanjaPrihoda);
-        command.Parameters.AddWithValue("@DatumDos", request.DatumDospelostiZaPodnosenjePrijave);
-        command.Parameters.AddWithValue("@DatumPod", request.DatumNacinPodnosenjaPrijave);
-        command.Parameters.AddWithValue("@Izmena", request.Izmena);
-        command.Parameters.AddWithValue("@IDOrgPU", request.IDOrganaPoreske);
-        command.Parameters.AddWithValue("@IDPorObv", request.IDPoreskogObveznika);
-        command.Parameters.AddWithValue("@IDVrstePrij", request.IDVrstePrijave);
-        command.Parameters.AddWithValue("@IDOsnova", request.IDOsnovaZaPrijavu);
-        command.Parameters.AddWithValue("@Email", (object?)request.Email ?? DBNull.Value);
-
-        var newId = await command.ExecuteScalarAsync();
+        var newId = Convert.ToInt32(await command.ExecuteScalarAsync());
 
         return CreatedAtAction(nameof(GetById), new { id = newId }, new { Id = newId });
     }
@@ -239,15 +207,4 @@ public class DocumentController : ControllerBase
     }
 }
 
-public class CreateDocumentRequest
-{
-    public DateTime DatumOstvarivanjaPrihoda { get; set; }
-    public DateTime DatumDospelostiZaPodnosenjePrijave { get; set; }
-    public DateTime DatumNacinPodnosenjaPrijave { get; set; }
-    public bool Izmena { get; set; }
-    public int IDOrganaPoreske { get; set; }
-    public long IDPoreskogObveznika { get; set; }
-    public int IDVrstePrijave { get; set; }
-    public int IDOsnovaZaPrijavu { get; set; }
-    public string? Email { get; set; }
-}
+

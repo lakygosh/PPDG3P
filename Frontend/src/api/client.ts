@@ -185,18 +185,8 @@ export const documentApi = {
     return response.data;
   },
 
-  create: async (data: {
-    datumOstvarivanjaPrihoda: string;
-    datumDospelostiZaPodnosenjePrijave: string;
-    datumNacinPodnosenjaPrijave: string;
-    izmena: boolean;
-    idOrganaPoreske: number;
-    idPoreskogObveznika: number;
-    idVrstePrijave: number;
-    idOsnovaZaPrijavu: number;
-    email?: string;
-  }): Promise<{ id: number }> => {
-    const response = await api.post('/document', data);
+  create: async (jsonDoc: unknown): Promise<{ id: number }> => {
+    const response = await api.post('/document', jsonDoc);
     return response.data;
   },
 
