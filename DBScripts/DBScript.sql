@@ -1,6 +1,6 @@
 ﻿USE [master]
 GO
-/****** Object:  Database [PPdb]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Database [PPdb]    Script Date: 23/03/2026 23:33:16 ******/
 CREATE DATABASE [PPdb]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -84,13 +84,13 @@ ALTER DATABASE [PPdb] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEANUP_POLI
 GO
 USE [PPdb]
 GO
-/****** Object:  Schema [ppdg3p]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Schema [ppdg3p]    Script Date: 23/03/2026 23:33:16 ******/
 CREATE SCHEMA [ppdg3p]
 GO
-/****** Object:  Schema [ppdg3p_arc]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Schema [ppdg3p_arc]    Script Date: 23/03/2026 23:33:16 ******/
 CREATE SCHEMA [ppdg3p_arc]
 GO
-/****** Object:  Table [ppdg3p].[PoreskiObveznik]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Table [ppdg3p].[PoreskiObveznik]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -106,7 +106,7 @@ CREATE TABLE [ppdg3p].[PoreskiObveznik](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[PPDG3P_Details]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Table [ppdg3p].[PPDG3P_Details]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -126,7 +126,7 @@ CREATE TABLE [ppdg3p].[PPDG3P_Details](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[StavkaPrenosa]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Table [ppdg3p].[StavkaPrenosa]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -146,7 +146,7 @@ CREATE TABLE [ppdg3p].[StavkaPrenosa](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[StavkaUmanjenja]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Table [ppdg3p].[StavkaUmanjenja]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -162,7 +162,7 @@ CREATE TABLE [ppdg3p].[StavkaUmanjenja](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[OrgPU]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Table [ppdg3p].[OrgPU]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -176,7 +176,7 @@ CREATE TABLE [ppdg3p].[OrgPU](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[Dokazi]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Table [ppdg3p].[Dokazi]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -193,7 +193,7 @@ CREATE TABLE [ppdg3p].[Dokazi](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[UlaganjneUResavanjeSP]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Table [ppdg3p].[UlaganjneUResavanjeSP]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -211,7 +211,7 @@ CREATE TABLE [ppdg3p].[UlaganjneUResavanjeSP](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[KapitalniGubitak]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Table [ppdg3p].[KapitalniGubitak]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -228,7 +228,7 @@ CREATE TABLE [ppdg3p].[KapitalniGubitak](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[UlaganjeUOsnKap]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Table [ppdg3p].[UlaganjeUOsnKap]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -243,7 +243,7 @@ CREATE TABLE [ppdg3p].[UlaganjeUOsnKap](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[PPDG3P]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Table [ppdg3p].[PPDG3P]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -262,7 +262,7 @@ CREATE TABLE [ppdg3p].[PPDG3P](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[Lice]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Table [ppdg3p].[Lice]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -279,7 +279,7 @@ CREATE TABLE [ppdg3p].[Lice](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[PrenosHartijaOdVrednosti]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Table [ppdg3p].[PrenosHartijaOdVrednosti]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -297,7 +297,7 @@ CREATE TABLE [ppdg3p].[PrenosHartijaOdVrednosti](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[DokumentOSticanju]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Table [ppdg3p].[DokumentOSticanju]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -315,7 +315,7 @@ CREATE TABLE [ppdg3p].[DokumentOSticanju](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [ppdg3p].[vw_PPDG3P_Document]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  View [ppdg3p].[vw_PPDG3P_Document]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -507,7 +507,7 @@ FROM [ppdg3p].[PPDG3P] p
 JOIN [ppdg3p].[PPDG3P_Details] pd
     ON pd.ID = p.ID;
 GO
-/****** Object:  Table [ppdg3p].[Broker]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Table [ppdg3p].[Broker]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -521,7 +521,7 @@ CREATE TABLE [ppdg3p].[Broker](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[Fizicko]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Table [ppdg3p].[Fizicko]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -536,7 +536,7 @@ CREATE TABLE [ppdg3p].[Fizicko](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[Pravno]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Table [ppdg3p].[Pravno]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -550,7 +550,7 @@ CREATE TABLE [ppdg3p].[Pravno](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [ppdg3p].[Punomocnik]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Table [ppdg3p].[Punomocnik]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -567,7 +567,7 @@ CREATE TABLE [ppdg3p].[Punomocnik](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Dokazi]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Index [IX_Dokazi]    Script Date: 23/03/2026 23:33:16 ******/
 CREATE NONCLUSTERED INDEX [IX_Dokazi] ON [ppdg3p].[Dokazi]
 (
 	[BrojDokaza] ASC
@@ -575,16 +575,16 @@ CREATE NONCLUSTERED INDEX [IX_Dokazi] ON [ppdg3p].[Dokazi]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UX_Lice_Email_NotNull]    Script Date: 17/02/2026 12:18:21 ******/
-CREATE UNIQUE NONCLUSTERED INDEX [UX_Lice_Email_NotNull] ON [ppdg3p].[Lice]
+/****** Object:  Index [IX_Lice_Email_NotNull]    Script Date: 23/03/2026 23:33:16 ******/
+CREATE NONCLUSTERED INDEX [IX_Lice_Email_NotNull] ON [ppdg3p].[Lice]
 (
 	[Email] ASC
 )
 INCLUDE([JMBG/ESB/PIB],[Drzava],[Adresa]) 
 WHERE ([Email] IS NOT NULL)
-WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_StavkaPrenosa_IDPrijave_Cover]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  Index [IX_StavkaPrenosa_IDPrijave_Cover]    Script Date: 23/03/2026 23:33:16 ******/
 CREATE NONCLUSTERED INDEX [IX_StavkaPrenosa_IDPrijave_Cover] ON [ppdg3p].[StavkaPrenosa]
 (
 	[IDPrijave] ASC
@@ -685,7 +685,7 @@ ALTER TABLE [ppdg3p].[PPDG3P_Details]  WITH CHECK ADD  CONSTRAINT [CK_PPDG3P_Det
 GO
 ALTER TABLE [ppdg3p].[PPDG3P_Details] CHECK CONSTRAINT [CK_PPDG3P_Details_IDVrstePrijave]
 GO
-/****** Object:  StoredProcedure [ppdg3p].[PPDG3P_OsnovicaCalc]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  StoredProcedure [ppdg3p].[PPDG3P_OsnovicaCalc]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -730,7 +730,7 @@ BEGIN
     WHERE p.ID = @IDPrijave;
 END
 GO
-/****** Object:  StoredProcedure [ppdg3p].[Seed_PPDG3P_Bulk]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  StoredProcedure [ppdg3p].[Seed_PPDG3P_Bulk]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -974,7 +974,7 @@ BEGIN
         (SELECT COUNT(*) FROM ppdg3p.Dokazi)          AS Dokazi_cnt;
 END
 GO
-/****** Object:  StoredProcedure [ppdg3p].[SetHardcoded_OsnovZaPrijavu]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  StoredProcedure [ppdg3p].[SetHardcoded_OsnovZaPrijavu]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1042,7 +1042,7 @@ CHECK (IDOsnovaZaPrijavu IN (' + @IdList + N'));';
     EXEC sys.sp_executesql @Sql;
 END
 GO
-/****** Object:  StoredProcedure [ppdg3p].[SetHardcoded_VrstaPrijave]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  StoredProcedure [ppdg3p].[SetHardcoded_VrstaPrijave]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1110,12 +1110,12 @@ CHECK (IDVrstePrijave IN (' + @IdList + N'));';
     EXEC sys.sp_executesql @Sql;
 END
 GO
-/****** Object:  StoredProcedure [ppdg3p].[UpsertPPDG3PDocumentFromJson]    Script Date: 17/02/2026 12:18:21 ******/
+/****** Object:  StoredProcedure [ppdg3p].[UpsertPPDG3PDocumentFromJson]    Script Date: 23/03/2026 23:33:16 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE   PROCEDURE [ppdg3p].[UpsertPPDG3PDocumentFromJson]
+CREATE PROCEDURE [ppdg3p].[UpsertPPDG3PDocumentFromJson]
     @IDPrijave int = NULL,
     @JsonDoc nvarchar(max),
     @Sync bit = 1
@@ -1303,10 +1303,14 @@ BEGIN
         ELSE
         BEGIN
             -- UPDATE mode: PPDG3P must exist
+            EXEC sys.sp_set_session_context @key = N'ppdg3p_allow_ppdg3p_update', @value = 1;
+
             UPDATE p
             SET p.IDPoreskogObveznika = COALESCE(@IDPoreskogObveznika, p.IDPoreskogObveznika)
             FROM ppdg3p.PPDG3P p
             WHERE p.ID = @IDPrijave;
+
+            EXEC sys.sp_set_session_context @key = N'ppdg3p_allow_ppdg3p_update', @value = NULL;
 
             IF @@ROWCOUNT = 0
                 THROW 52012, 'Ne postoji PPDG3P sa datim @IDPrijave.', 1;
@@ -1414,12 +1418,12 @@ BEGIN
             FROM OPENJSON(@JsonDoc, N'$.Prenosi')
             WITH (
                 DatumPrenosa date N'$.DatumPrenosa',
-                ProdajnaCena bigint N'$.ProdajnaCena',
+                ProdajnaCena nvarchar(30) N'$.ProdajnaCena',
                 DatumSticanja date N'$.DatumSticanja',
-                NabavnaCena bigint N'$.NabavnaCena',
+                NabavnaCena nvarchar(30) N'$.NabavnaCena',
                 Naziv nvarchar(30) N'$.Naziv',
-                BrDokOPrenosu int N'$.BrDokOPrenosu',
-                BrojPrenetihHOV int N'$.BrojPrenetihHOV',
+                BrDokOPrenosu nvarchar(20) N'$.BrDokOPrenosu',
+                BrojPrenetihHOV nvarchar(20) N'$.BrojPrenetihHOV',
                 IsDigital bit N'$.IsDigital',
                 DokumentiJson nvarchar(max) N'$.DokumentiOSticanju' AS JSON
             )
@@ -1430,31 +1434,39 @@ BEGIN
                 CASE
                     -- Check required fields (NULL means either missing or invalid format)
                     WHEN DatumPrenosa IS NULL THEN N'Датум преноса је обавезно поље и мора бити валидан датум.'
+                    WHEN DatumPrenosa > CAST(GETDATE() AS DATE) THEN N'Датум преноса не може бити у будућности.'
                     WHEN DatumSticanja IS NULL THEN N'Датум стицања је обавезно поље и мора бити валидан датум.'
+                    WHEN DatumSticanja > CAST(GETDATE() AS DATE) THEN N'Датум стицања не може бити у будућности.'
                     WHEN DatumSticanja > DatumPrenosa THEN N'Датум стицања мора бити пре илиједнак датуму преноса.'
-                    WHEN ProdajnaCena IS NULL THEN N'Продајна цена је обавезно поље и мора бити валидан број.'
-                    WHEN ProdajnaCena <= 0 THEN N'Продајна цена мора бити позитиван број.'
-                    WHEN NabavnaCena IS NULL THEN N'Набавна цена је обавезно поље и мора бити валидан број.'
-                    WHEN NabavnaCena <= 0 THEN N'Набавна цена мора бити позитиван број.'
+                    WHEN ProdajnaCena IS NULL THEN N'Продајна цена је обавезно поље.'
+                    WHEN TRY_CONVERT(bigint, ProdajnaCena) IS NULL THEN N'Продајна цена мора бити валидан број.'
+                    WHEN TRY_CONVERT(bigint, ProdajnaCena) <= 0 THEN N'Продајна цена мора бити позитиван број.'
+                    WHEN NabavnaCena IS NULL THEN N'Набавна цена је обавезно поље.'
+                    WHEN TRY_CONVERT(bigint, NabavnaCena) IS NULL THEN N'Набавна цена мора бити валидан број.'
+                    WHEN TRY_CONVERT(bigint, NabavnaCena) <= 0 THEN N'Набавна цена мора бити позитиван број.'
                     -- HoV-specific fields (only for non-digital entries)
                     WHEN COALESCE(IsDigital, 0) = 0 AND (Naziv IS NULL OR LTRIM(RTRIM(Naziv)) = '') THEN N'Назив емитента је обавезно поље.'
-                    WHEN COALESCE(IsDigital, 0) = 0 AND BrDokOPrenosu IS NULL THEN N'Број документа о преносу је обавезно поље и мора бити валидан број.'
-                    WHEN COALESCE(IsDigital, 0) = 0 AND BrDokOPrenosu <= 0 THEN N'Број документа о преносу мора бити позитиван број.'
-                    WHEN COALESCE(IsDigital, 0) = 0 AND BrojPrenetihHOV IS NULL THEN N'Број пренетих ХОВ је обавезно поље и мора бити валидан број.'
-                    WHEN COALESCE(IsDigital, 0) = 0 AND BrojPrenetihHOV <= 0 THEN N'Број пренетих ХОВ мора бити позитиван број.'
+                    WHEN COALESCE(IsDigital, 0) = 0 AND BrDokOPrenosu IS NULL THEN N'Број документа о преносу је обавезно поље.'
+                    WHEN COALESCE(IsDigital, 0) = 0 AND TRY_CONVERT(int, BrDokOPrenosu) IS NULL THEN N'Број документа о преносу мора бити валидан број.'
+                    WHEN COALESCE(IsDigital, 0) = 0 AND TRY_CONVERT(int, BrDokOPrenosu) <= 0 THEN N'Број документа о преносу мора бити позитиван број.'
+                    WHEN COALESCE(IsDigital, 0) = 0 AND BrojPrenetihHOV IS NULL THEN N'Број пренетих ХОВ је обавезно поље.'
+                    WHEN COALESCE(IsDigital, 0) = 0 AND TRY_CONVERT(int, BrojPrenetihHOV) IS NULL THEN N'Број пренетих ХОВ мора бити валидан број.'
+                    WHEN COALESCE(IsDigital, 0) = 0 AND TRY_CONVERT(int, BrojPrenetihHOV) <= 0 THEN N'Број пренетих ХОВ мора бити позитиван број.'
                     WHEN COALESCE(IsDigital, 0) = 0 AND (DokumentiJson IS NULL OR DokumentiJson = N'[]') THEN N'Мора постојати најмање један документ о стицању.'
                     ELSE NULL
                 END
         FROM SrcValidate
         WHERE
             DatumPrenosa IS NULL OR
+            DatumPrenosa > CAST(GETDATE() AS DATE) OR
             DatumSticanja IS NULL OR
+            DatumSticanja > CAST(GETDATE() AS DATE) OR
             DatumSticanja > DatumPrenosa OR
-            ProdajnaCena IS NULL OR ProdajnaCena <= 0 OR
-            NabavnaCena IS NULL OR NabavnaCena <= 0 OR
+            ProdajnaCena IS NULL OR TRY_CONVERT(bigint, ProdajnaCena) IS NULL OR TRY_CONVERT(bigint, ProdajnaCena) <= 0 OR
+            NabavnaCena IS NULL OR TRY_CONVERT(bigint, NabavnaCena) IS NULL OR TRY_CONVERT(bigint, NabavnaCena) <= 0 OR
             (COALESCE(IsDigital, 0) = 0 AND (Naziv IS NULL OR LTRIM(RTRIM(Naziv)) = '')) OR
-            (COALESCE(IsDigital, 0) = 0 AND (BrDokOPrenosu IS NULL OR BrDokOPrenosu <= 0)) OR
-            (COALESCE(IsDigital, 0) = 0 AND (BrojPrenetihHOV IS NULL OR BrojPrenetihHOV <= 0)) OR
+            (COALESCE(IsDigital, 0) = 0 AND (BrDokOPrenosu IS NULL OR TRY_CONVERT(int, BrDokOPrenosu) IS NULL OR TRY_CONVERT(int, BrDokOPrenosu) <= 0)) OR
+            (COALESCE(IsDigital, 0) = 0 AND (BrojPrenetihHOV IS NULL OR TRY_CONVERT(int, BrojPrenetihHOV) IS NULL OR TRY_CONVERT(int, BrojPrenetihHOV) <= 0)) OR
             (COALESCE(IsDigital, 0) = 0 AND (DokumentiJson IS NULL OR DokumentiJson = N'[]'));
 
         IF @ErrorMsg IS NOT NULL
@@ -1484,9 +1496,9 @@ BEGIN
             CROSS APPLY OPENJSON(p.DokumentiJson)
             WITH (
                 DatumSticanja date N'$.DatumSticanja',
-                BrojDokOSticanju int N'$.BrojDokOSticanju',
-                BrojStecenihJedinica int N'$.BrojStecenihJedinica',
-                NabavnaCena bigint N'$.NabavnaCena'
+                BrojDokOSticanju nvarchar(20) N'$.BrojDokOSticanju',
+                BrojStecenihJedinica nvarchar(20) N'$.BrojStecenihJedinica',
+                NabavnaCena nvarchar(30) N'$.NabavnaCena'
             ) x
         )
         SELECT TOP 1
@@ -1495,20 +1507,25 @@ BEGIN
                 N' (пренос #' + CAST(PrenosRowNum AS nvarchar(10)) + N'): ' +
                 CASE
                     WHEN DatumSticanja IS NULL THEN N'Датум стицања је обавезно поље и мора бити валидан датум.'
-                    WHEN BrojDokOSticanju IS NULL THEN N'Број документа о стицању је обавезно поље и мора бити валидан број.'
-                    WHEN BrojDokOSticanju <= 0 THEN N'Број документа о стицању мора бити позитиван број.'
-                    WHEN BrojStecenihJedinica IS NULL THEN N'Број стечених ХОВ је обавезно поље и мора бити валидан број.'
-                    WHEN BrojStecenihJedinica <= 0 THEN N'Број стечених ХОВ мора бити позитиван број.'
-                    WHEN NabavnaCena IS NULL THEN N'Набавна цена је обавезно поље и мора бити валидан број.'
-                    WHEN NabavnaCena <= 0 THEN N'Набавна цена мора бити позитиван број.'
+                    WHEN DatumSticanja > CAST(GETDATE() AS DATE) THEN N'Датум стицања не може бити у будућности.'
+                    WHEN BrojDokOSticanju IS NULL THEN N'Број документа о стицању је обавезно поље.'
+                    WHEN TRY_CONVERT(int, BrojDokOSticanju) IS NULL THEN N'Број документа о стицању мора бити валидан број.'
+                    WHEN TRY_CONVERT(int, BrojDokOSticanju) <= 0 THEN N'Број документа о стицању мора бити позитиван број.'
+                    WHEN BrojStecenihJedinica IS NULL THEN N'Број стечених ХОВ је обавезно поље.'
+                    WHEN TRY_CONVERT(int, BrojStecenihJedinica) IS NULL THEN N'Број стечених ХОВ мора бити валидан број.'
+                    WHEN TRY_CONVERT(int, BrojStecenihJedinica) <= 0 THEN N'Број стечених ХОВ мора бити позитиван број.'
+                    WHEN NabavnaCena IS NULL THEN N'Набавна цена је обавезно поље.'
+                    WHEN TRY_CONVERT(bigint, NabavnaCena) IS NULL THEN N'Набавна цена мора бити валидан број.'
+                    WHEN TRY_CONVERT(bigint, NabavnaCena) <= 0 THEN N'Набавна цена мора бити позитиван број.'
                     ELSE NULL
                 END
         FROM SrcDokValidate
         WHERE
             DatumSticanja IS NULL OR
-            BrojDokOSticanju IS NULL OR BrojDokOSticanju <= 0 OR
-            BrojStecenihJedinica IS NULL OR BrojStecenihJedinica <= 0 OR
-            NabavnaCena IS NULL OR NabavnaCena <= 0;
+            DatumSticanja > CAST(GETDATE() AS DATE) OR
+            BrojDokOSticanju IS NULL OR TRY_CONVERT(int, BrojDokOSticanju) IS NULL OR TRY_CONVERT(int, BrojDokOSticanju) <= 0 OR
+            BrojStecenihJedinica IS NULL OR TRY_CONVERT(int, BrojStecenihJedinica) IS NULL OR TRY_CONVERT(int, BrojStecenihJedinica) <= 0 OR
+            NabavnaCena IS NULL OR TRY_CONVERT(bigint, NabavnaCena) IS NULL OR TRY_CONVERT(bigint, NabavnaCena) <= 0;
 
         IF @ErrorMsg IS NOT NULL
             THROW 52034, @ErrorMsg, 1;
@@ -1665,6 +1682,7 @@ BEGIN
                 N'Ставка умањења #' + CAST(RowNum AS nvarchar(10)) + N': ' +
                 CASE
                     WHEN DatumUlaganja IS NULL THEN N'Датум улагања је обавезно поље и мора бити валидан датум.'
+                    WHEN DatumUlaganja > CAST(GETDATE() AS DATE) THEN N'Датум улагања не може бити у будућности.'
                     -- KAP_GUB
                     WHEN Tip = 'KAP_GUB' AND BrojResenja IS NULL THEN N'Број решења је обавезно поље.'
                     WHEN Tip = 'KAP_GUB' AND TRY_CONVERT(int, BrojResenja) IS NULL THEN N'Број решења мора бити валидан број.'
@@ -1691,6 +1709,7 @@ BEGIN
         FROM SrcUmanjValidate
         WHERE
             DatumUlaganja IS NULL OR
+            DatumUlaganja > CAST(GETDATE() AS DATE) OR
             (Tip = 'KAP_GUB' AND (BrojResenja IS NULL OR TRY_CONVERT(int, BrojResenja) IS NULL OR TRY_CONVERT(int, BrojResenja) <= 0)) OR
             (Tip = 'KAP_GUB' AND (IznosKapGub IS NULL OR TRY_CONVERT(bigint, IznosKapGub) IS NULL OR TRY_CONVERT(bigint, IznosKapGub) <= 0)) OR
             (Tip = 'OSN_KAP' AND (IznosUlozenUKapDP IS NULL OR TRY_CONVERT(bigint, IznosUlozenUKapDP) IS NULL OR TRY_CONVERT(bigint, IznosUlozenUKapDP) <= 0)) OR
@@ -1795,12 +1814,34 @@ BEGIN
     END TRY
     BEGIN CATCH
         EXEC sys.sp_set_session_context @key = N'ppdg3p_allow_dokazi_jmbg_update', @value = NULL;
+        EXEC sys.sp_set_session_context @key = N'ppdg3p_allow_ppdg3p_update', @value = NULL;
         IF @@TRANCOUNT > 0 ROLLBACK;
         THROW;
     END CATCH
 END
 GO
+/****** Object:  Trigger [ppdg3p].[trg_Dokazi_SetJMBG]    Script Date: 24/03/2026 ******/
+GO
+CREATE TRIGGER [ppdg3p].[trg_Dokazi_SetJMBG]
+ON [ppdg3p].[Dokazi]
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Allow the stored procedure to set JMBG directly via MERGE UPDATE
+    IF CONVERT(bit, SESSION_CONTEXT(N'ppdg3p_allow_dokazi_jmbg_update')) = 1
+        RETURN;
+
+    UPDATE d
+    SET d.[JMBG/ESB/PIB_po] = p.IDPoreskogObveznika
+    FROM ppdg3p.Dokazi d
+    INNER JOIN inserted i ON d.BrojDokaza = i.BrojDokaza
+    INNER JOIN ppdg3p.PPDG3P p ON p.ID = i.IDPrijave;
+END
+GO
+
 USE [master]
 GO
-ALTER DATABASE [PPdb] SET  READ_WRITE 
+ALTER DATABASE [PPdb] SET  READ_WRITE
 GO

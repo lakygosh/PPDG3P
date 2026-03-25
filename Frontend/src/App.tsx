@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout } from './components';
-import { Dashboard, TablePage, KdtPage, DocumentsPage, DocumentFormPage } from './pages';
+import { Dashboard, TablePage, DocumentsPage, DocumentFormPage } from './pages';
 import './App.css';
 
 function App() {
@@ -14,7 +14,6 @@ function App() {
           <Route path="/documents/:id" element={<DocumentFormPage />} />
           <Route path="/table/:tableName" element={<TablePage />} />
           <Route path="/view/:tableName" element={<TablePage />} />
-          <Route path="/kdt/:hierarchyName" element={<KdtPage />} />
         </Routes>
       </Layout>
     </BrowserRouter>

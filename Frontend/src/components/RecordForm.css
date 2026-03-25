@@ -72,6 +72,30 @@
   cursor: not-allowed;
 }
 
+.form-input-excluded {
+  opacity: 0.5;
+  border-style: dashed;
+}
+
+.exclude-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.exclude-toggle input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: #3b82f6;
+}
+
+.exclude-toggle-text {
+  color: #6b7280;
+  user-select: none;
+}
+
 .field-hint {
   font-size: 12px;
   color: #9ca3af;

@@ -52,16 +52,41 @@ public class SqlService : ISqlService
         var columns = string.Join(", ", values.Keys.Select(k => $"[{k}]"));
         var paramNames = string.Join(", ", values.Keys.Select((k, i) => $"@p{i}"));
 
-        // Use OUTPUT INTO to avoid trigger conflicts
-        var sql = $@"
-            INSERT INTO [{_schema}].[{tableName}] ({columns})
-            VALUES ({paramNames});
-
-            SELECT * FROM [{_schema}].[{tableName}]
-            WHERE ID = SCOPE_IDENTITY();";
+        // Dynamically find the IDENTITY column for this table
+        var identityColSql = $@"
+            SELECT c.name
+            FROM sys.columns c
+            JOIN sys.tables t ON c.object_id = t.object_id
+            JOIN sys.schemas s ON t.schema_id = s.schema_id
+            WHERE s.name = @schema AND t.name = @table AND c.is_identity = 1";
 
         using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync();
+
+        string? identityColumn = null;
+        using (var identityCmd = new SqlCommand(identityColSql, connection))
+        {
+            identityCmd.Parameters.AddWithValue("@schema", _schema);
+            identityCmd.Parameters.AddWithValue("@table", tableName);
+            identityColumn = (string?)await identityCmd.ExecuteScalarAsync();
+        }
+
+        string sql;
+        if (identityColumn != null)
+        {
+            sql = $@"
+                INSERT INTO [{_schema}].[{tableName}] ({columns})
+                VALUES ({paramNames});
+
+                SELECT * FROM [{_schema}].[{tableName}]
+                WHERE [{identityColumn}] = SCOPE_IDENTITY();";
+        }
+        else
+        {
+            sql = $@"
+                INSERT INTO [{_schema}].[{tableName}] ({columns})
+                VALUES ({paramNames});";
+        }
 
         using var command = new SqlCommand(sql, connection);
 

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PPDG3P.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+661fefd0673ed4fc0a96d7d0d81ce2d777a2180c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d29b5e22cc76ec520a520144cde665b38bb45af7")]
 [assembly: System.Reflection.AssemblyProductAttribute("PPDG3P.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PPDG3P.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

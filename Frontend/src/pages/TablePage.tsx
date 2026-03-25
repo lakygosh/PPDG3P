@@ -1,21 +1,23 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { metadataApi, tableApi, handleApiError } from '../api/client';
+import { tableApi, handleApiError } from '../api/client';
 import { DataGrid, RecordForm, ErrorPanel } from '../components';
 import { getTableDisplayName } from '../types';
-import type { TableMetadata, ApiError } from '../types';
+import type { ApiError } from '../types';
 import './TablePage.css';
 
 type ModalMode = 'none' | 'insert' | 'edit' | 'delete';
 
 export function TablePage() {
   const { tableName } = useParams<{ tableName: string }>();
-  const [metadata, setMetadata] = useState<TableMetadata | null>(null);
+  const [columns, setColumns] = useState<string[]>([]);
+  const [primaryKey, setPrimaryKey] = useState<string[]>([]);
   const [data, setData] = useState<Record<string, unknown>[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<ApiError | null>(null);
   const [modalMode, setModalMode] = useState<ModalMode>('none');
   const [selectedRow, setSelectedRow] = useState<Record<string, unknown> | null>(null);
+  const [excludableColumns, setExcludableColumns] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
   const loadData = useCallback(async () => {
@@ -25,13 +27,11 @@ export function TablePage() {
     setError(null);
 
     try {
-      const [metadataResult, dataResult] = await Promise.all([
-        metadataApi.getTableMetadata(tableName),
-        tableApi.getAll(tableName),
-      ]);
-
-      setMetadata(metadataResult);
-      setData(dataResult.rows);
+      const result = await tableApi.getAll(tableName);
+      setData(result.rows);
+      setColumns(result.columns);
+      setPrimaryKey(result.primaryKey);
+      setExcludableColumns(result.excludableColumns ?? []);
     } catch (err) {
       setError(handleApiError(err));
     } finally {
@@ -61,19 +61,18 @@ export function TablePage() {
   };
 
   const handleUpdate = async (values: Record<string, unknown>) => {
-    if (!tableName || !metadata || !selectedRow) return;
+    if (!tableName || !selectedRow) return;
 
     setSubmitting(true);
     setError(null);
 
-    // Build keys from primary key columns
-    const keys: Record<string, unknown> = {};
-    metadata.primaryKeyColumns.forEach((pk) => {
-      keys[pk] = selectedRow[pk];
+    const payload: Record<string, unknown> = { ...values };
+    columns.forEach((col) => {
+      payload[`_original_${col}`] = selectedRow[col] ?? null;
     });
 
     try {
-      await tableApi.update(tableName, keys, values);
+      await tableApi.update(tableName, payload);
       setModalMode('none');
       setSelectedRow(null);
       await loadData();
@@ -85,14 +84,13 @@ export function TablePage() {
   };
 
   const handleDelete = async () => {
-    if (!tableName || !metadata || !selectedRow) return;
+    if (!tableName || !selectedRow) return;
 
     setSubmitting(true);
     setError(null);
 
-    // Build keys from primary key columns
     const keys: Record<string, unknown> = {};
-    metadata.primaryKeyColumns.forEach((pk) => {
+    primaryKey.forEach((pk) => {
       keys[pk] = selectedRow[pk];
     });
 
@@ -125,8 +123,6 @@ export function TablePage() {
     setSelectedRow(null);
   };
 
-  const isView = metadata?.tableType === 'VIEW';
-
   return (
     <div className="table-page">
       <div className="page-header">
@@ -135,10 +131,10 @@ export function TablePage() {
             {tableName ? getTableDisplayName(tableName) : 'Učitavanje...'}
           </h1>
           <p className="page-subtitle">
-            {isView ? 'Pogled (samo za čitanje)' : `Tabela • ${data.length} redova`}
+            {`Tabela • ${data.length} redova`}
           </p>
         </div>
-        {!isView && metadata && (
+        {columns.length > 0 && (
           <button
             className="btn btn-primary"
             onClick={() => {
@@ -154,19 +150,19 @@ export function TablePage() {
 
       <ErrorPanel error={error} onClose={() => setError(null)} />
 
-      {metadata && (
+      {columns.length > 0 && (
         <DataGrid
-          columns={metadata.columns}
+          columns={columns}
           data={data}
-          primaryKeyColumns={metadata.primaryKeyColumns}
-          onEdit={!isView ? openEditModal : undefined}
-          onDelete={!isView ? openDeleteModal : undefined}
+          primaryKeyColumns={primaryKey}
+          onEdit={openEditModal}
+          onDelete={openDeleteModal}
           loading={loading}
         />
       )}
 
       {/* Insert Modal */}
-      {modalMode === 'insert' && metadata && (
+      {modalMode === 'insert' && columns.length > 0 && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
@@ -176,8 +172,7 @@ export function TablePage() {
             <div className="modal-body">
               <ErrorPanel error={error} onClose={() => setError(null)} />
               <RecordForm
-                columns={metadata.columns}
-                foreignKeys={metadata.foreignKeys}
+                columns={columns}
                 onSubmit={handleInsert}
                 onCancel={closeModal}
                 loading={submitting}
@@ -188,7 +183,7 @@ export function TablePage() {
       )}
 
       {/* Edit Modal */}
-      {modalMode === 'edit' && metadata && selectedRow && (
+      {modalMode === 'edit' && columns.length > 0 && selectedRow && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
@@ -198,13 +193,13 @@ export function TablePage() {
             <div className="modal-body">
               <ErrorPanel error={error} onClose={() => setError(null)} />
               <RecordForm
-                columns={metadata.columns}
-                foreignKeys={metadata.foreignKeys}
+                columns={columns}
                 initialValues={selectedRow}
                 onSubmit={handleUpdate}
                 onCancel={closeModal}
                 isEdit
                 loading={submitting}
+                excludableColumns={excludableColumns}
               />
             </div>
           </div>
@@ -225,7 +220,7 @@ export function TablePage() {
                 Da li ste sigurni da želite da obrišete ovaj zapis?
               </p>
               <div className="delete-details">
-                {metadata?.primaryKeyColumns.map((pk) => (
+                {primaryKey.map((pk) => (
                   <div key={pk}>
                     <strong>{pk}:</strong> {String(selectedRow[pk])}
                   </div>

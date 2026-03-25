@@ -10,7 +10,8 @@
       "Bash(npm run dev:*)",
       "Bash(curl:*)",
       "Bash(timeout /t 5 /nobreak)",
-      "Bash(npx tsc --noEmit)"
+      "Bash(npx tsc --noEmit)",
+      "Bash(find /d/lazar/Documents/Repositories/PPDG3P -name *.csproj -o -name *.sql)"
     ]
   }
 }

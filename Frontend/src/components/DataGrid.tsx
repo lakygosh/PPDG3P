@@ -1,10 +1,8 @@
-import { useMemo } from 'react';
-import type { ColumnMetadata } from '../types';
 import { getColumnDisplayName } from '../types';
 import './DataGrid.css';
 
 interface DataGridProps {
-  columns: ColumnMetadata[];
+  columns: string[];
   data: Record<string, unknown>[];
   primaryKeyColumns: string[];
   onEdit?: (row: Record<string, unknown>) => void;
@@ -12,32 +10,11 @@ interface DataGridProps {
   loading?: boolean;
 }
 
-function formatCellValue(value: unknown, dataType: string): string {
+function formatCellValue(value: unknown): string {
   if (value === null || value === undefined) {
     return '';
   }
 
-  if (dataType === 'bit') {
-    return value ? 'Da' : 'Ne';
-  }
-
-  if (dataType === 'date' || dataType === 'datetime' || dataType === 'datetime2') {
-    try {
-      const date = new Date(value as string);
-      return date.toLocaleDateString('sr-RS');
-    } catch {
-      return String(value);
-    }
-  }
-
-  if (dataType === 'bigint' || dataType === 'int' || dataType === 'decimal' || dataType === 'money') {
-    const num = Number(value);
-    if (!isNaN(num)) {
-      return num.toLocaleString('sr-RS');
-    }
-  }
-
-  // Trim nchar/nvarchar values
   if (typeof value === 'string') {
     return value.trim();
   }
@@ -53,10 +30,6 @@ export function DataGrid({
   onDelete,
   loading,
 }: DataGridProps) {
-  const visibleColumns = useMemo(() => {
-    return columns.filter(col => !col.columnName.startsWith('_'));
-  }, [columns]);
-
   const getRowKey = (row: Record<string, unknown>): string => {
     return primaryKeyColumns.map(pk => String(row[pk] ?? '')).join('_');
   };
@@ -83,10 +56,9 @@ export function DataGrid({
       <table className="data-grid">
         <thead>
           <tr>
-            {visibleColumns.map((col) => (
-              <th key={col.columnName} title={col.columnName}>
-                {getColumnDisplayName(col.columnName)}
-                {col.isPrimaryKey && <span className="pk-indicator">PK</span>}
+            {columns.map((col) => (
+              <th key={col} title={col}>
+                {getColumnDisplayName(col)}
               </th>
             ))}
             {(onEdit || onDelete) && <th className="actions-column">Akcije</th>}
@@ -95,9 +67,9 @@ export function DataGrid({
         <tbody>
           {data.map((row) => (
             <tr key={getRowKey(row)}>
-              {visibleColumns.map((col) => (
-                <td key={col.columnName} className={col.isPrimaryKey ? 'pk-cell' : ''}>
-                  {formatCellValue(row[col.columnName], col.dataType)}
+              {columns.map((col) => (
+                <td key={col}>
+                  {formatCellValue(row[col])}
                 </td>
               ))}
               {(onEdit || onDelete) && (

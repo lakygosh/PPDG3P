@@ -20,7 +20,7 @@ export function Dashboard() {
         const statsPromises = mainTables.map(async (name) => {
           try {
             const result = await tableApi.getAll(name);
-            return { tableName: name, rowCount: result.totalCount };
+            return { tableName: name, rowCount: result.rows.length };
           } catch {
             return { tableName: name, rowCount: 0 };
           }
@@ -95,28 +95,6 @@ export function Dashboard() {
             <div className="stat-label">Stavki umanjenja</div>
           </div>
           <Link to="/table/StavkaUmanjenja" className="stat-link">Pogledaj sve →</Link>
-        </div>
-      </div>
-
-      <div className="quick-actions">
-        <h2>Brze akcije</h2>
-        <div className="action-buttons">
-          <Link to="/table/PPDG3P" className="action-button">
-            <span className="action-icon">➕</span>
-            <span>Nova prijava</span>
-          </Link>
-          <Link to="/table/PoreskiObveznik" className="action-button">
-            <span className="action-icon">👤</span>
-            <span>Novi obveznik</span>
-          </Link>
-          <Link to="/kdt/Lice" className="action-button">
-            <span className="action-icon">🏢</span>
-            <span>Nova osoba/firma</span>
-          </Link>
-          <Link to="/view/vw_PPDG3P_Document" className="action-button">
-            <span className="action-icon">📄</span>
-            <span>Pregled dokumenata</span>
-          </Link>
         </div>
       </div>
 

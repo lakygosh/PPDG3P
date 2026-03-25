@@ -17,16 +17,6 @@ interface OrganPU {
   naziv: string;
 }
 
-interface VrstaPrijave {
-  id: number;
-  naziv: string;
-}
-
-interface OsnovZaPrijavu {
-  id: number;
-  naziv: string;
-}
-
 interface DokumentOSticanju {
   datumSticanja: string;
   brojDokOSticanju: string;
@@ -176,20 +166,18 @@ export function DocumentFormPage() {
   const [submitting, setSubmitting] = useState(false);
 
   // Lookup data
-  const [organiPU, setOrganiPU] = useState<OrganPU[]>([]);
-  const [vrstePrijave, setVrstePrijave] = useState<VrstaPrijave[]>([]);
-  const [osnoviZaPrijavu, setOsnoviZaPrijavu] = useState<OsnovZaPrijavu[]>([]);
-  const [poreskiObveznici, setPoreskiObveznici] = useState<PoreskiObveznik[]>([]);
+  const [, setOrganiPU] = useState<OrganPU[]>([]);
+  const [, setPoreskiObveznici] = useState<PoreskiObveznik[]>([]);
 
   // Form data
   const [formData, setFormData] = useState<FormData>({
     vrstaPrijave: 1,
     osnovZaPrijavu: 1,
-    datumOstvarivanjaPrihoda: '',
-    datumDospelosti: '',
-    datumPodnosenja: '',
+    datumOstvarivanjaPrihoda: getTodayDate(),
+    datumDospelosti: getTodayDate(),
+    datumPodnosenja: getTodayDate(),
     izmena: false,
-    organPU: 0,
+    organPU: 1,
     tipObveznika: 'fizicko',
     jmbgObveznika: '1234567890123',
     imeObveznika: 'Тест',
@@ -208,19 +196,6 @@ export function DocumentFormPage() {
 
   // Load lookup data
   useEffect(() => {
-    // VrstaPrijave and OsnovZaPrijavu are no longer DB tables - hardcoded inline
-    setVrstePrijave([
-      { id: 1, naziv: 'Konačna prijava' },
-      { id: 2, naziv: 'Izmenjena prijava' },
-    ]);
-    setOsnoviZaPrijavu([
-      { id: 1, naziv: 'Prodaja nepokretnosti' },
-      { id: 2, naziv: 'Prodaja hartija od vrednosti (HoV)' },
-      { id: 3, naziv: 'Udeo u pravnom licu' },
-      { id: 4, naziv: 'Autorska prava' },
-      { id: 5, naziv: 'Nasleđe/Poklon' },
-    ]);
-
     const loadLookups = async () => {
       try {
         const [orgResult, obvResult] = await Promise.all([
@@ -489,19 +464,6 @@ export function DocumentFormPage() {
     }));
   };
 
-  const handleObveznikChange = (jmbg: string) => {
-    setFormData(prev => ({ ...prev, jmbgObveznika: jmbg }));
-    const obveznik = poreskiObveznici.find(o => String(o.id) === jmbg);
-    if (obveznik) {
-      setFormData(prev => ({
-        ...prev,
-        imeObveznika: obveznik.ime,
-        prezimeObveznika: obveznik.prezime,
-        prebivaliste: obveznik.prebivalisteOstvPrih,
-      }));
-    }
-  };
-
   if (loading) {
     return <div className="loading">Učitavanje...</div>;
   }
@@ -522,34 +484,26 @@ export function DocumentFormPage() {
           <div className="form-row">
             <div className="form-group">
               <label>1.1 Врста пријаве *</label>
-              <select
+              <input
+                type="text"
                 value={formData.vrstaPrijave}
-                onChange={(e) => setFormData(prev => ({ ...prev, vrstaPrijave: parseInt(e.target.value) }))}
-              >
-                <option value={0}>-- Изаберите --</option>
-                {vrstePrijave.map(v => (
-                  <option key={v.id} value={v.id}>{v.naziv}</option>
-                ))}
-              </select>
+                onChange={(e) => setFormData(prev => ({ ...prev, vrstaPrijave: parseInt(e.target.value) || 0 }))}
+              />
             </div>
             <div className="form-group">
               <label>1.1а Основ за пријаву *</label>
-              <select
+              <input
+                type="text"
                 value={formData.osnovZaPrijavu}
-                onChange={(e) => setFormData(prev => ({ ...prev, osnovZaPrijavu: parseInt(e.target.value) }))}
-              >
-                <option value={0}>-- Изаберите --</option>
-                {osnoviZaPrijavu.map(o => (
-                  <option key={o.id} value={o.id}>{o.naziv}</option>
-                ))}
-              </select>
+                onChange={(e) => setFormData(prev => ({ ...prev, osnovZaPrijavu: parseInt(e.target.value) || 0 }))}
+              />
             </div>
           </div>
           <div className="form-row">
             <div className="form-group">
               <label>1.2 Датум остваривања прихода *</label>
               <input
-                type="date"
+                type="text"
                 value={formData.datumOstvarivanjaPrihoda}
                 onChange={(e) => setFormData(prev => ({ ...prev, datumOstvarivanjaPrihoda: e.target.value }))}
               />
@@ -557,7 +511,7 @@ export function DocumentFormPage() {
             <div className="form-group">
               <label>1.3 Датум доспелости за подношење *</label>
               <input
-                type="date"
+                type="text"
                 value={formData.datumDospelosti}
                 onChange={(e) => setFormData(prev => ({ ...prev, datumDospelosti: e.target.value }))}
               />
@@ -565,7 +519,7 @@ export function DocumentFormPage() {
             <div className="form-group">
               <label>1.4 Датум подношења пријаве *</label>
               <input
-                type="date"
+                type="text"
                 value={formData.datumPodnosenja}
                 onChange={(e) => setFormData(prev => ({ ...prev, datumPodnosenja: e.target.value }))}
               />
@@ -574,25 +528,19 @@ export function DocumentFormPage() {
           <div className="form-row">
             <div className="form-group">
               <label>1.5 Измена/Сторнирање</label>
-              <select
-                value={formData.izmena ? 'true' : 'false'}
+              <input
+                type="text"
+                value={String(formData.izmena)}
                 onChange={(e) => setFormData(prev => ({ ...prev, izmena: e.target.value === 'true' }))}
-              >
-                <option value="false">Не</option>
-                <option value="true">Да</option>
-              </select>
+              />
             </div>
             <div className="form-group">
               <label>Орган пореске управе *</label>
-              <select
+              <input
+                type="text"
                 value={formData.organPU}
-                onChange={(e) => setFormData(prev => ({ ...prev, organPU: parseInt(e.target.value) }))}
-              >
-                <option value={0}>-- Изаберите --</option>
-                {organiPU.map(o => (
-                  <option key={o.id} value={o.id}>{o.naziv}</option>
-                ))}
-              </select>
+                onChange={(e) => setFormData(prev => ({ ...prev, organPU: parseInt(e.target.value) || 0 }))}
+              />
             </div>
           </div>
         </section>
@@ -603,13 +551,11 @@ export function DocumentFormPage() {
           <div className="form-row">
             <div className="form-group">
               <label>2.1 Тип пореског обвезника</label>
-              <select
+              <input
+                type="text"
                 value={formData.tipObveznika}
                 onChange={(e) => setFormData(prev => ({ ...prev, tipObveznika: e.target.value }))}
-              >
-                <option value="fizicko">Физичко лице</option>
-                <option value="pravno">Правно лице</option>
-              </select>
+              />
             </div>
             <div className="form-group">
               <label>2.2 ЈМБГ/ЕСБ/ПИБ *</label>
@@ -717,7 +663,7 @@ export function DocumentFormPage() {
                       <td>{index + 1}</td>
                       <td>
                         <input
-                          type="date"
+                          type="text"
                           value={stavka.datumPrenosa}
                           onChange={(e) => updateStavkaPrenosa(realIndex, 'datumPrenosa', e.target.value)}
                         />
@@ -731,7 +677,7 @@ export function DocumentFormPage() {
                       </td>
                       <td>
                         <input
-                          type="date"
+                          type="text"
                           value={stavka.datumSticanja}
                           onChange={(e) => updateStavkaPrenosa(realIndex, 'datumSticanja', e.target.value)}
                         />
@@ -782,7 +728,7 @@ export function DocumentFormPage() {
                       <div className="form-group">
                         <label>4.3 Датум преноса</label>
                         <input
-                          type="date"
+                          type="text"
                           value={stavka.datumPrenosa}
                           onChange={(e) => updateStavkaPrenosa(realIndex, 'datumPrenosa', e.target.value)}
                         />
@@ -832,7 +778,7 @@ export function DocumentFormPage() {
                           <tr key={docIndex}>
                             <td>
                               <input
-                                type="date"
+                                type="text"
                                 value={doc.datumSticanja}
                                 onChange={(e) => updateDokumentOSticanju(realIndex, docIndex, 'datumSticanja', e.target.value)}
                               />
@@ -901,7 +847,7 @@ export function DocumentFormPage() {
                       <td>{index + 1}</td>
                       <td>
                         <input
-                          type="date"
+                          type="text"
                           value={stavka.datumUlaganja}
                           onChange={(e) => updateStavkaUmanjenja(realIndex, 'datumUlaganja', e.target.value)}
                         />
@@ -921,13 +867,11 @@ export function DocumentFormPage() {
                         />
                       </td>
                       <td>
-                        <select
-                          value={stavka.domacinstvo ? 'true' : 'false'}
+                        <input
+                          type="text"
+                          value={String(stavka.domacinstvo)}
                           onChange={(e) => updateStavkaUmanjenja(realIndex, 'domacinstvo', e.target.value === 'true')}
-                        >
-                          <option value="false">Не</option>
-                          <option value="true">Да</option>
-                        </select>
+                        />
                       </td>
                       <td>
                         <button type="button" className="btn-remove" onClick={() => removeStavkaUmanjenja(realIndex)}>✕</button>
@@ -965,7 +909,7 @@ export function DocumentFormPage() {
                       <td>{index + 1}</td>
                       <td>
                         <input
-                          type="date"
+                          type="text"
                           value={stavka.datumUlaganja}
                           onChange={(e) => updateStavkaUmanjenja(realIndex, 'datumUlaganja', e.target.value)}
                         />
@@ -1020,7 +964,7 @@ export function DocumentFormPage() {
                       <td>{index + 1}</td>
                       <td>
                         <input
-                          type="date"
+                          type="text"
                           value={stavka.datumUlaganja}
                           onChange={(e) => updateStavkaUmanjenja(realIndex, 'datumUlaganja', e.target.value)}
                         />
@@ -1141,7 +1085,7 @@ function mapPrenosi(prenosi: unknown[] | undefined): StavkaPrenosa[] {
       isDigital: prenos.IsDigital as boolean || false,
       naziv: prenos.Naziv as string,
       brDokOPrenosu: String(prenos.BrDokOPrenosu ?? ''),
-      brojPrenetihHOV: String(prenos.BrojPrenetihHOV ?? ''),
+      brojPrenetihHOV: String(prenos.BrPrenetihHOV ?? ''),
       dokumentiOSticanju: dokumenti?.map(d => ({
         datumSticanja: formatDateForInput(d.DatumSticanja as string),
         brojDokOSticanju: String(d.BrojDokOSticanju ?? ''),
